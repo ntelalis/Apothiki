@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>aa %281%29.ico</ApplicationIcon>
+    <ApplicationIcon>ApothikiIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -69,11 +69,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApothikiDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Dialog.cs">
+    <Compile Include="NewDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialog.Designer.cs">
-      <DependentUpon>Dialog.cs</DependentUpon>
+    <Compile Include="NewDialog.Designer.cs">
+      <DependentUpon>NewDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -83,14 +83,20 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DelDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DelDialog.Designer.cs">
+      <DependentUpon>DelDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="SxesiDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="SxesiDialog.Designer.cs">
       <DependentUpon>SxesiDialog.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Dialog.resx">
-      <DependentUpon>Dialog.cs</DependentUpon>
+    <EmbeddedResource Include="NewDialog.resx">
+      <DependentUpon>NewDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -104,6 +110,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DelDialog.resx">
+      <DependentUpon>DelDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SxesiDialog.resx">
       <DependentUpon>SxesiDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -132,8 +141,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="aa %281%29.ico" />
-    <Content Include="aa.ico" />
+    <Content Include="ApothikiIcon.ico" />
     <Content Include="Apothiki.mdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
