@@ -84,7 +84,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DelDialog";
             this.Text = "SxesiDialog";
-            this.Load += new System.EventHandler(this.DelDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

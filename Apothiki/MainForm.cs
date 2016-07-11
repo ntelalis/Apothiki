@@ -36,70 +36,13 @@ namespace Apothiki {
         ApothikiDataSet.SxesiDataTable sxesiTable;
 
         private void importProionToKouti_Click(object sender, EventArgs e) {
-            sxesidialog = new SxesiDialog();
-
-            koutiTable.Clear();
-            proionTable.Clear();
-            try {
-                con.Open();
-
-                dataReader = KoutiaCmd.ExecuteReader();
-                koutiTable.Load(dataReader);
-                dataReader.Close();
-                KoutiaCmd.Dispose();
-
-                dataReader = ProiontaCmd.ExecuteReader();
-                proionTable.Load(dataReader);
-                dataReader.Close();
-                ProiontaCmd.Dispose();
-
-                sxesidialog.setComboBox1(koutiTable);
-                sxesidialog.setComboBox2(proionTable);
-                if (sxesidialog.ShowDialog(this) == DialogResult.OK) {
-                    try {
-                        newSxesiCmd.Parameters["@KoutiId"].Value = sxesidialog.getComboBox1();
-                        newSxesiCmd.Parameters["@ProionName"].Value = sxesidialog.getComboBox2();
-
-                        KoutiLocByIdCmd.Parameters["@Id"].Value = newSxesiCmd.Parameters["@KoutiId"].Value;
-                        dataReader = KoutiLocByIdCmd.ExecuteReader();
-                        if (dataReader.HasRows) {
-                            dataReader.Read();
-                            newSxesiCmd.Parameters["@KoutiLocation"].Value = dataReader.GetString(1);
-                            dataReader.Close();
-                            ProiontaCmd.Dispose();
-
-                        }
-                        else {
-                            newSxesiCmd.Parameters["@KoutiLocation"].Value = "";
-                        }
-
-                        int rowsAffected = newSxesiCmd.ExecuteNonQuery();
-                        if (rowsAffected == 1) {
-                            MessageBox.Show("Η εισαγωγή ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                        else if (rowsAffected == 0) {
-                            MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                    catch (SqlException sqlEx) {
-                        if (sqlEx.Number == 2627) {
-                            MessageBox.Show("Το προϊόν υπάρχει ήδη στο Κουτί", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else {
-                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                    }
-                }
-            }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            con.Close();
+            sxesidialog = new SxesiDialog(SxesiDialogType.Import, con);
+            sxesidialog.ShowDialog(this);
             searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void exportProionApoKouti_Click(object sender, EventArgs e) {
-            sxesidialog = new SxesiDialog(conString);
+            //sxesidialog = new SxesiDialog(conString);
 
             koutiTable.Clear();
 
@@ -116,8 +59,8 @@ namespace Apothiki {
 
                 if (sxesidialog.ShowDialog(this) == DialogResult.OK) {
                     try {
-                        delSxesiCmd.Parameters["@KoutiId"].Value = sxesidialog.getComboBox1();
-                        delSxesiCmd.Parameters["@ProionName"].Value = sxesidialog.getComboBox2();
+                        //delSxesiCmd.Parameters["@KoutiId"].Value = sxesidialog.getComboBox1();
+                        //delSxesiCmd.Parameters["@ProionName"].Value = sxesidialog.getComboBox2();
                         con.Open();
                         int rowsAffected = delSxesiCmd.ExecuteNonQuery();
                         if (rowsAffected == 1) {
@@ -285,8 +228,6 @@ namespace Apothiki {
 
             changeProionCmdString = "UPDATE PROION SET (Name=@NewName) WHERE (Name=@OldName)";
 
-            newSxesiCmdString = "INSERT INTO SXESI (KoutiId,ProionName,KoutiLocation) VALUES (@KoutiId,@ProionName,@KoutiLocation)";
-            delSxesiCmdString = "DELETE FROM SXESI WHERE (KoutiId=@KoutiId) AND (ProionName=@ProionName)";
 
             KoutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
             ProiontaCmdString = "SELECT * FROM Proion ORDER BY Name";
@@ -309,14 +250,7 @@ namespace Apothiki {
             changeProionCmd.Parameters.Add("@NewName", SqlDbType.NVarChar);
             changeProionCmd.Parameters.Add("@OldName", SqlDbType.NVarChar);
 
-            newSxesiCmd = new SqlCommand(newSxesiCmdString, con);
-            newSxesiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
-            newSxesiCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
-            newSxesiCmd.Parameters.Add("@KoutiLocation", SqlDbType.NVarChar);
 
-            delSxesiCmd = new SqlCommand(delSxesiCmdString, con);
-            delSxesiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
-            delSxesiCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
 
             KoutiaCmd = new SqlCommand(KoutiaCmdString, con);
 
@@ -361,7 +295,7 @@ namespace Apothiki {
                 MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if(con.State != ConnectionState.Closed)
+                if (con.State != ConnectionState.Closed)
                     con.Close();
             }
         }
