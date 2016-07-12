@@ -168,7 +168,6 @@
             this.αλλαγήToolStripMenuItem.Name = "αλλαγήToolStripMenuItem";
             this.αλλαγήToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.αλλαγήToolStripMenuItem.Text = "Αλλαγή";
-            this.αλλαγήToolStripMenuItem.Click += new System.EventHandler(this.αλλαγήToolStripMenuItem_Click);
             // 
             // changeKouti
             // 
@@ -259,6 +258,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Αποθήκη";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);

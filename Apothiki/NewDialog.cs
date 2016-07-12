@@ -98,7 +98,7 @@ namespace Apothiki {
                     con.Open();
                     int rowsAffected = newProionCmd.ExecuteNonQuery();
                     if (rowsAffected == 1) {
-                        MessageBox.Show("Η εισαγωγή ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Η εισαγωγή του \"" + name + "\" ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else {
                         MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

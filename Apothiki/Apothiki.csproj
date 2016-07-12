@@ -69,6 +69,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ApothikiDataSet.xsd</DependentUpon>
     </Compile>
+    <Compile Include="ChangeDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeDialog.Designer.cs">
+      <DependentUpon>ChangeDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="NewDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -95,6 +101,9 @@
     <Compile Include="SxesiDialog.Designer.cs">
       <DependentUpon>SxesiDialog.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ChangeDialog.resx">
+      <DependentUpon>ChangeDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="NewDialog.resx">
       <DependentUpon>NewDialog.cs</DependentUpon>
     </EmbeddedResource>
