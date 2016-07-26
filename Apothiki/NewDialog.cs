@@ -26,6 +26,7 @@ namespace Apothiki {
                 this.label1.Text = "Αριθμός κουτιού";
                 this.label2.Text = "Τοποθεσία (Προαιρετικό)";
                 this.label2.Visible = true;
+                this.textBox1.Size = new System.Drawing.Size(64, 21);
                 textBox2.Visible = true;
 
                 this.ActiveControl = textBox1;
@@ -39,7 +40,7 @@ namespace Apothiki {
 
                 this.Text = "Νέο Προϊόν";
                 this.label1.Text = "Όνομα προϊόντος";
-
+                this.textBox1.Size = new System.Drawing.Size(224, 21);
                 this.ActiveControl = textBox1;
 
                 newProionCmdString = "INSERT INTO PROION (Name) VALUES (@Name)";
@@ -131,10 +132,13 @@ namespace Apothiki {
 
             if (this.label2.Visible == true) {
                 newKouti();
+                ((MainForm)this.Owner).updateDataGridViewByKouti();
             }
             else {
                 newProion();
+                ((MainForm)this.Owner).updateDataGridViewByProion();
             }
+            
         }
     }
 }

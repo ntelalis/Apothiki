@@ -36,7 +36,7 @@ namespace Apothiki {
             this.changeDialogType = changeDialogType;
             if (changeDialogType == ChangeDialogType.Kouti) {
 
-                this.comboBox1.Size = new System.Drawing.Size(96, 21);
+                this.comboBox1.Size = new System.Drawing.Size(64, 21);
                 this.textBox2.Location = new System.Drawing.Point(160, 86);
                 this.textBox2.Size = new System.Drawing.Size(179, 20);
                 this.label2.Location = new System.Drawing.Point(157, 66);

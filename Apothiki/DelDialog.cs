@@ -19,7 +19,6 @@ namespace Apothiki {
         SqlDataReader dataReader;
         DelDialogType delDialogType;
         DialogResult result;
-        int comboBoxWidth = 0;
         ApothikiDataSet.KoutiDataTable koutiTable;
         ApothikiDataSet.ProionDataTable proionTable;
 
@@ -29,8 +28,8 @@ namespace Apothiki {
             this.delDialogType = delDialogType;
 
             if (delDialogType == DelDialogType.Kouti) {
-                comboBoxWidth = 64;
                 InitializeComponent();
+                this.comboBox1.Size = new System.Drawing.Size(64, 21);
                 this.Text = "Διαγραφή κουτιού";
                 this.label1.Text = "Αριθμός Κουτιού";
 
@@ -44,8 +43,8 @@ namespace Apothiki {
 
             }
             else if (delDialogType == DelDialogType.Proion) {
-                comboBoxWidth = 192;
                 InitializeComponent();
+                this.comboBox1.Size = new System.Drawing.Size(224, 21);
                 this.Text = "Διαγραφή προϊόντος";
                 this.label1.Text = "Όνομα προϊόντος";
 

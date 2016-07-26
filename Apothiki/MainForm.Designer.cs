@@ -50,6 +50,9 @@
             this.showProionta = new System.Windows.Forms.ToolStripMenuItem();
             this.showSxeseis = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.radioKoutia = new System.Windows.Forms.RadioButton();
+            this.radioProionta = new System.Windows.Forms.RadioButton();
+            this.radioSxeseis = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -69,6 +72,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.radioSxeseis);
+            this.splitContainer1.Panel1.Controls.Add(this.radioProionta);
+            this.splitContainer1.Panel1.Controls.Add(this.radioKoutia);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.searchSxeseisTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.menuStrip1);
@@ -215,27 +221,28 @@
             this.προβολήToolStripMenuItem.Name = "προβολήToolStripMenuItem";
             this.προβολήToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.προβολήToolStripMenuItem.Text = "Προβολή";
+            this.προβολήToolStripMenuItem.Visible = false;
             // 
             // showKoutia
             // 
             this.showKoutia.Name = "showKoutia";
-            this.showKoutia.Size = new System.Drawing.Size(126, 22);
+            this.showKoutia.Size = new System.Drawing.Size(152, 22);
             this.showKoutia.Text = "Κουτιά";
-            this.showKoutia.Click += new System.EventHandler(this.showKoutia_Click);
+            //this.showKoutia.Click += new System.EventHandler(this.showKoutia_Click);
             // 
             // showProionta
             // 
             this.showProionta.Name = "showProionta";
-            this.showProionta.Size = new System.Drawing.Size(126, 22);
+            this.showProionta.Size = new System.Drawing.Size(152, 22);
             this.showProionta.Text = "Προϊόντα";
-            this.showProionta.Click += new System.EventHandler(this.showProionta_Click);
+            //this.showProionta.Click += new System.EventHandler(this.showProionta_Click);
             // 
             // showSxeseis
             // 
             this.showSxeseis.Name = "showSxeseis";
-            this.showSxeseis.Size = new System.Drawing.Size(126, 22);
+            this.showSxeseis.Size = new System.Drawing.Size(152, 22);
             this.showSxeseis.Text = "Σχέσεις";
-            this.showSxeseis.Click += new System.EventHandler(this.showSxeseis_Click);
+            //this.showSxeseis.Click += new System.EventHandler(this.showSxeseis_Click);
             // 
             // dataGridView
             // 
@@ -248,6 +255,41 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.Size = new System.Drawing.Size(471, 256);
             this.dataGridView.TabIndex = 0;
+            // 
+            // radioKoutia
+            // 
+            this.radioKoutia.AutoSize = true;
+            this.radioKoutia.Location = new System.Drawing.Point(328, 69);
+            this.radioKoutia.Name = "radioKoutia";
+            this.radioKoutia.Size = new System.Drawing.Size(59, 17);
+            this.radioKoutia.TabIndex = 3;
+            this.radioKoutia.Text = "Κουτιά";
+            this.radioKoutia.UseVisualStyleBackColor = true;
+            this.radioKoutia.CheckedChanged += new System.EventHandler(this.radioKoutia_CheckedChanged);
+            // 
+            // radioProionta
+            // 
+            this.radioProionta.AutoSize = true;
+            this.radioProionta.Location = new System.Drawing.Point(328, 92);
+            this.radioProionta.Name = "radioProionta";
+            this.radioProionta.Size = new System.Drawing.Size(73, 17);
+            this.radioProionta.TabIndex = 4;
+            this.radioProionta.Text = "Προϊόντα";
+            this.radioProionta.UseVisualStyleBackColor = true;
+            this.radioProionta.CheckedChanged += new System.EventHandler(this.radioProionta_CheckedChanged);
+            // 
+            // radioSxeseis
+            // 
+            this.radioSxeseis.AutoSize = true;
+            this.radioSxeseis.Checked = true;
+            this.radioSxeseis.Location = new System.Drawing.Point(328, 46);
+            this.radioSxeseis.Name = "radioSxeseis";
+            this.radioSxeseis.Size = new System.Drawing.Size(66, 17);
+            this.radioSxeseis.TabIndex = 5;
+            this.radioSxeseis.TabStop = true;
+            this.radioSxeseis.Text = "Σχέσεις";
+            this.radioSxeseis.UseVisualStyleBackColor = true;
+            this.radioSxeseis.CheckedChanged += new System.EventHandler(this.radioSxeseis_CheckedChanged);
             // 
             // MainForm
             // 
@@ -296,6 +338,9 @@
         private System.Windows.Forms.ToolStripMenuItem αλλαγήToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeKouti;
         private System.Windows.Forms.ToolStripMenuItem changeProion;
+        private System.Windows.Forms.RadioButton radioSxeseis;
+        private System.Windows.Forms.RadioButton radioProionta;
+        private System.Windows.Forms.RadioButton radioKoutia;
     }
 }
 

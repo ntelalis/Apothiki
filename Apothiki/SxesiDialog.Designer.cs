@@ -92,7 +92,7 @@
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(12, 80);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(196, 21);
+            this.comboBox2.Size = new System.Drawing.Size(224, 21);
             this.comboBox2.TabIndex = 13;
             // 
             // SxesiDialog
