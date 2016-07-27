@@ -23,9 +23,7 @@ namespace Apothiki {
         ApothikiDataSet.ProionDataTable proionTable;
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            if (changeDialogType == ChangeDialogType.Kouti) {
-                updateOldValue();
-            }
+            updateOldValue();
         }
 
         ApothikiDataSet.KoutiDataTable koutiTable1, koutiTable2;
@@ -39,6 +37,7 @@ namespace Apothiki {
                 this.comboBox1.Size = new System.Drawing.Size(64, 21);
                 this.textBox2.Location = new System.Drawing.Point(160, 86);
                 this.textBox2.Size = new System.Drawing.Size(179, 20);
+                this.textBox3.Size = new System.Drawing.Size(64, 21);
                 this.label2.Location = new System.Drawing.Point(157, 66);
                 label3.Visible = true;
                 textBox1.Visible = true;
@@ -53,10 +52,11 @@ namespace Apothiki {
                 koutiById = new SqlCommand(koutiByIdString, con);
                 koutiById.Parameters.Add("@Id", SqlDbType.Int);
 
-                changeKoutiString = "UPDATE KOUTI SET Location=@NewLocation WHERE (Id=@Id)";
+                changeKoutiString = "UPDATE KOUTI SET Id=@NewId, Location=@NewLocation WHERE (Id=@OldId)";
                 changeKouti = new SqlCommand(changeKoutiString, con);
                 changeKouti.Parameters.Add("@NewLocation", SqlDbType.NVarChar);
-                changeKouti.Parameters.Add("@Id", SqlDbType.Int);
+                changeKouti.Parameters.Add("@OldId", SqlDbType.Int);
+                changeKouti.Parameters.Add("@NewId", SqlDbType.Int);
 
                 koutiTable1 = new ApothikiDataSet.KoutiDataTable();
                 koutiTable2 = new ApothikiDataSet.KoutiDataTable();
@@ -67,7 +67,8 @@ namespace Apothiki {
                 this.Text = "Αλλαγή Προϊόντος";
                 this.label1.Text = "Παλιά τιμή";
                 this.label2.Text = "Νέα τιμή";
-
+                this.label4.Visible = false;
+                this.textBox3.Visible = false;
                 proiontaCmdString = "SELECT * FROM PROION ORDER BY Name";
                 proiontaCmd = new SqlCommand(proiontaCmdString, con);
                 proionTable = new ApothikiDataSet.ProionDataTable();
@@ -133,30 +134,37 @@ namespace Apothiki {
         }
 
         private void updateOldValue() {
-            if (comboBox1.Text != "") {
-                koutiTable2.Clear();
-                int id = Int32.Parse(comboBox1.Text);
-                koutiById.Parameters["@Id"].Value = id;
-                try {
-                    con.Open();
-                    dataReader = koutiById.ExecuteReader();
-                    koutiTable2.Load(dataReader);
-                    dataReader.Close();
-                    koutiById.Dispose();
-                    if (koutiTable2.Rows.Count == 1) {
-                        textBox1.Text = koutiTable2.Rows[0]["Location"].ToString();
+            if (changeDialogType == ChangeDialogType.Kouti) {
+                if (comboBox1.Text != "") {
+                    textBox3.Text = comboBox1.Text;
+                    koutiTable2.Clear();
+                    int id = Int32.Parse(comboBox1.Text);
+                    koutiById.Parameters["@Id"].Value = id;
+                    try {
+                        con.Open();
+                        dataReader = koutiById.ExecuteReader();
+                        koutiTable2.Load(dataReader);
+                        dataReader.Close();
+                        koutiById.Dispose();
+                        if (koutiTable2.Rows.Count == 1) {
+                            textBox1.Text = koutiTable2.Rows[0]["Location"].ToString();
+                        }
+                        else {
+                            textBox1.Text = "";
+                        }
+                        textBox2.Text = textBox1.Text;
                     }
-                    else {
-                        textBox1.Text = "";
+                    catch (SqlException sqlEx) {
+                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally {
+                        if (con.State != ConnectionState.Closed)
+                            con.Close();
                     }
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed)
-                        con.Close();
-                }
+            }
+            else if (changeDialogType == ChangeDialogType.Proion) {
+                textBox2.Text = comboBox1.Text;
             }
         }
 
@@ -164,52 +172,34 @@ namespace Apothiki {
             if (changeDialogType == ChangeDialogType.Kouti) {
 
                 String newLocation = textBox2.Text;
-                int id = Int32.Parse(comboBox1.Text);
-
-                changeKouti.Parameters["@Id"].Value = id;
-                changeKouti.Parameters["@NewLocation"].Value = newLocation;
-
+                int oldid = Int32.Parse(comboBox1.Text);
+                int newid = 0;
                 try {
-                    con.Open();
-                    int rowsAffected = changeKouti.ExecuteNonQuery();
-                    MessageBox.Show("Η τοποθεσία του κουτιού " + id + " άλλαξε σε \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    newid = Int32.Parse(textBox3.Text);
+                    changeKouti.Parameters["@NewId"].Value = newid;
                 }
-                catch (SqlException sqlEx) {
-                    if (sqlEx.Number == 2627) {
-                        MessageBox.Show("Το κουτί " + id + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                catch (FormatException) {
+                    MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    newid = oldid;
+                    changeKouti.Parameters["@NewId"].Value = newid;
                 }
-                finally {
-                    if (con.State != ConnectionState.Closed) {
-                        con.Close();
-                    }
-                }
-                updateOldValue();
-            }
-            else if (changeDialogType == ChangeDialogType.Proion) {
-                String oldValue = comboBox1.Text;
-                String newValue = textBox2.Text;
-                newValue = newValue.Trim();
-                if (newValue != "") {
-                    changeProionCmd.Parameters["@NewName"].Value = newValue;
-                    changeProionCmd.Parameters["@OldName"].Value = oldValue;
-
+                changeKouti.Parameters["@OldId"].Value = oldid;
+                changeKouti.Parameters["@NewLocation"].Value = newLocation;
+                if (newid != oldid || newLocation != textBox1.Text) {
                     try {
                         con.Open();
-                        int rowsAffected = changeProionCmd.ExecuteNonQuery();
-                        if (rowsAffected == 1) {
-                            MessageBox.Show("Το προϊόν \"" + oldValue + "\" άλλαξε σε \"" + newValue + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
+                        int rowsAffected = changeKouti.ExecuteNonQuery();
+                        if (oldid == newid)
+                            MessageBox.Show("Η τοποθεσία του κουτιού " + oldid + " άλλαξε σε \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else if (newLocation == textBox1.Text)
+                            MessageBox.Show("Το κουτί " + oldid + " άλλαξε σε " + newid, "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else {
-                            MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Το κουτί " + oldid + " άλλαξε σε " + newid + " με καινούρια τοποθεσία \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     catch (SqlException sqlEx) {
                         if (sqlEx.Number == 2627) {
-                            MessageBox.Show("Το κουτί " + newValue + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Το κουτί " + oldid + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         else {
                             MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -221,10 +211,53 @@ namespace Apothiki {
                         }
                     }
                     fillCombobox();
-                    textBox2.Text = "";
+                    updateOldValue();
                 }
                 else {
-                    MessageBox.Show("Δεν επιτρέπεται κενή τιμή", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Δεν πραγματοποιήθηκε καμία αλλαγή", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else if (changeDialogType == ChangeDialogType.Proion) {
+                String oldValue = comboBox1.Text;
+                String newValue = textBox2.Text;
+                newValue = newValue.Trim();
+                if (oldValue != newValue) {
+                    if (newValue != "") {
+                        changeProionCmd.Parameters["@NewName"].Value = newValue;
+                        changeProionCmd.Parameters["@OldName"].Value = oldValue;
+
+                        try {
+                            con.Open();
+                            int rowsAffected = changeProionCmd.ExecuteNonQuery();
+                            if (rowsAffected == 1) {
+                                MessageBox.Show("Το προϊόν \"" + oldValue + "\" άλλαξε σε \"" + newValue + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else {
+                                MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        catch (SqlException sqlEx) {
+                            if (sqlEx.Number == 2627) {
+                                MessageBox.Show("Το κουτί " + newValue + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                            else {
+                                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                        finally {
+                            if (con.State != ConnectionState.Closed) {
+                                con.Close();
+                            }
+                        }
+                        fillCombobox();
+                        textBox2.Text = comboBox1.Text;
+                    }
+                    else {
+                        MessageBox.Show("Δεν επιτρέπεται κενή τιμή", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else {
+                    MessageBox.Show("Δεν πραγματοποιήθηκε καμία αλλαγή", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             ((MainForm)this.Owner).updateDataGridView();
