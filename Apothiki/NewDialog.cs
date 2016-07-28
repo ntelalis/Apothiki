@@ -132,11 +132,11 @@ namespace Apothiki {
 
             if (this.label2.Visible == true) {
                 newKouti();
-                ((MainForm)this.Owner).updateDataGridViewByKouti();
+                ((MainForm)this.Owner).updateDataGridViewByKoutia();
             }
             else {
                 newProion();
-                ((MainForm)this.Owner).updateDataGridViewByProion();
+                ((MainForm)this.Owner).updateDataGridViewByProionta();
             }
             
         }

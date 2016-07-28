@@ -230,7 +230,7 @@ namespace Apothiki {
                 comboBox1_SelectedIndexChanged(null, null);
                 updateOKButton();
             }
-            ((MainForm)this.Owner).updateDataGridView();
+            ((MainForm)this.Owner).updateDataGridViewBySxeseis();
         }
 
         private void updateOKButton() {

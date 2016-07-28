@@ -103,7 +103,7 @@ namespace Apothiki {
                     }
                 }
                 fillComboBox();
-                ((MainForm)this.Owner).updateDataGridView();
+                ((MainForm)this.Owner).updateDataGridViewBySxeseis();
             }
 
         }

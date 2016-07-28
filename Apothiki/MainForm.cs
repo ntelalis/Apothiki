@@ -2,387 +2,285 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace Apothiki {
 
     public partial class MainForm : Form {
 
+        //Window Forms
         NewDialog newDialog;
         DelDialog delDialog;
         SxesiDialog sxesidialog;
         ChangeDialog changeDialog;
 
-        String conString;   //DB Connection String
+        //Helper Lists for matching possible database values from incomplete strings
+        List<String> productStrings;
+        List<String> locationStrings;
 
-        List<String> productStrings = new List<string>();
-        List<String> koutiStrings = new List<string>();
-        List<String> locationStrings = new List<string>();
-
+        //DB related variables
+        String conString;
         SqlConnection con;
         SqlDataReader dataReader;
 
-        String KoutiaCmdString, KoutiaByIdCmdString, KoutiaByLocationCmdString,
-               ProiontaCmdString, ProiontaByNameCmdString,
-               SxeseisCmdString, SxeseisByKoutiIdCmdString, SxeseisByProionNameCmdString, SxeseisByKoutiLocationCmdString;
+        //SQL string queries 
+        String koutiaCmdString, koutiaByIdCmdString, koutiaByLocationCmdString,
+               proiontaCmdString, proiontaByNameCmdString,
+               sxeseisCmdString, sxeseisByKoutiIdCmdString, sxeseisByProionNameCmdString, sxeseisByKoutiLocationCmdString,
+               locationStringsCmdString;
 
+        //SQL Command queries
         SqlCommand KoutiaCmd, KoutiaByIdCmd, KoutiaByLocationCmd,
                    ProiontaCmd, ProiontaByNameCmd,
                    SxeseisCmd, SxeseisByKoutiIdCmd, SxeseisByProionNameCmd, SxeseisByKoutiLocationCmd,
                    locationStringsCmd;
 
+        //Datatables for storing select queries
         ApothikiDataSet.KoutiDataTable koutiTable;
-        ApothikiDataSet.ProionDataTable proionTable;  //DataTables
+        ApothikiDataSet.ProionDataTable proionTable;
         ApothikiDataSet.SxesiDataTable sxesiTable;
 
         public MainForm() {
             InitializeComponent();
             initStrings();
-            con = new SqlConnection(conString);
             initCmds();
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
             updateProductStrings();
             updateLocationStrings();
-            showSxeseis_Click(null, null, "");
-
+            showSxeseis("");
         }
 
         private void importProionToKouti_Click(object sender, EventArgs e) {
             sxesidialog = new SxesiDialog(SxesiDialogType.Import, con);
             sxesidialog.ShowDialog(this);
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void exportProionApoKouti_Click(object sender, EventArgs e) {
             sxesidialog = new SxesiDialog(SxesiDialogType.Export, con);
             sxesidialog.ShowDialog(this);
-            searchSxeseisTextBox_TextChanged(null, null);
-        }
-
-        private void radioSxeseis_CheckedChanged(object sender, EventArgs e) {
-            showSxeseis_Click(null, null, searchSxeseisTextBox.Text);
-        }
-
-        private void radioKoutia_CheckedChanged(object sender, EventArgs e) {
-            showKoutia_Click(null, null, searchSxeseisTextBox.Text);
-        }
-
-        private void radioProionta_CheckedChanged(object sender, EventArgs e) {
-            showProionta_Click(null, null, searchSxeseisTextBox.Text);
         }
 
         private void newKouti_Click(object sender, EventArgs e) {
             newDialog = new NewDialog(NewDialogType.Kouti, con);
             newDialog.ShowDialog(this);
             updateLocationStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void newProion_Click(object sender, EventArgs e) {
             newDialog = new NewDialog(NewDialogType.Proion, con);
             newDialog.ShowDialog(this);
             updateProductStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void changeKouti_Click(object sender, EventArgs e) {
             changeDialog = new ChangeDialog(ChangeDialogType.Kouti, con);
             changeDialog.ShowDialog(this);
             updateLocationStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void changeProion_Click(object sender, EventArgs e) {
             changeDialog = new ChangeDialog(ChangeDialogType.Proion, con);
             changeDialog.ShowDialog(this);
             updateProductStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void delKouti_Click(object sender, EventArgs e) {
             delDialog = new DelDialog(DelDialogType.Kouti, con);
             delDialog.ShowDialog(this);
             updateLocationStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void delProion_Click(object sender, EventArgs e) {
             delDialog = new DelDialog(DelDialogType.Proion, con);
             delDialog.ShowDialog(this);
             updateProductStrings();
-            searchSxeseisTextBox_TextChanged(null, null);
         }
 
-        private void showKoutia_Click(object sender, EventArgs e, String text) {
+        private void radioSxeseis_CheckedChanged(object sender, EventArgs e) {
+            showSxeseis(searchSxeseisTextBox.Text);
+        }
 
+        private void radioKoutia_CheckedChanged(object sender, EventArgs e) {
+            showKoutia(searchSxeseisTextBox.Text);
+        }
+
+        private void radioProionta_CheckedChanged(object sender, EventArgs e) {
+            showProionta(searchSxeseisTextBox.Text);
+        }
+
+        private void showKoutia(String text) {
+            text = text.Trim();
             koutiTable.Clear();
-
-            if (text != "") {
-                int num;
-                if (int.TryParse(text, out num)) {
-
-                    try {
-                        con.Open();
+            try {
+                con.Open();
+                //if there is text search by text or else return everything
+                if (text != "") {
+                    //if text is number search by id or else search by location
+                    int num;
+                    if (int.TryParse(text, out num)) {
                         KoutiaByIdCmd.Parameters["@Id"].Value = num;
                         dataReader = KoutiaByIdCmd.ExecuteReader();
                         koutiTable.Load(dataReader);
-                        dataReader.Close();
                         KoutiaByIdCmd.Dispose();
-                        dataGridView.DataSource = koutiTable;
-                        dataGridView.Columns[0].Width = 50;
-                        dataGridView.Columns[1].Width = 200;
-                        dataGridView.Columns[0].HeaderText = "Αριθμός";
-                        dataGridView.Columns[1].HeaderText = "Τοποθεσία";
-
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally {
-                        if (con.State != ConnectionState.Closed)
-                            con.Close();
-                    }
-
-                }
-                else {
-                    try {
-                        con.Open();
+                    else {
                         foreach (String s in locationStrings) {
                             if (s.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
-
                                 KoutiaByLocationCmd.Parameters["@Location"].Value = s;
                                 dataReader = KoutiaByLocationCmd.ExecuteReader();
                                 koutiTable.Load(dataReader);
                             }
                         }
-                        dataReader.Close();
-                        KoutiaByIdCmd.Dispose();
-                        dataGridView.DataSource = koutiTable;
-                        dataGridView.Columns[0].Width = 50;
-                        dataGridView.Columns[1].Width = 200;
-                        dataGridView.Columns[0].HeaderText = "Αριθμός";
-                        dataGridView.Columns[1].HeaderText = "Τοποθεσία";
-
-                    }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally {
-                        if (con.State != ConnectionState.Closed)
-                            con.Close();
+                        KoutiaByLocationCmd.Dispose();
                     }
                 }
-            }
-            else {
-                try {
-                    con.Open();
+                else {
                     dataReader = KoutiaCmd.ExecuteReader();
                     koutiTable.Load(dataReader);
-                    dataReader.Close();
                     KoutiaCmd.Dispose();
-                    dataGridView.DataSource = koutiTable;
-                    dataGridView.Columns[0].Width = 50;
-                    dataGridView.Columns[1].Width = 200;
-                    dataGridView.Columns[0].HeaderText = "Αριθμός";
-                    dataGridView.Columns[1].HeaderText = "Τοποθεσία";
-
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed)
-                        con.Close();
-                }
-
+                dataReader.Close();
+                dataGridView.DataSource = koutiTable;
+                dataGridView.Columns[0].Width = 50;
+                dataGridView.Columns[1].Width = 200;
+                dataGridView.Columns[0].HeaderText = "Αριθμός";
+                dataGridView.Columns[1].HeaderText = "Τοποθεσία";
+            }
+            catch (SqlException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
             }
         }
 
-        private void showProionta_Click(object sender, EventArgs e, String text) {
+        private void showProionta(String text) {
+            text = text.Trim();
             proionTable.Clear();
-            if (text != "") {
-                try {
-                    con.Open();
+            try {
+                con.Open();
+                //if there is text search by text or else return everything
+                if (text != "") {
                     String name = text.Trim();
                     foreach (String s in productStrings) {
                         if (s.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) {
-
                             ProiontaByNameCmd.Parameters["@Name"].Value = s;
                             dataReader = ProiontaByNameCmd.ExecuteReader();
                             proionTable.Load(dataReader);
                         }
                     }
-                    dataReader.Close();
                     ProiontaByNameCmd.Dispose();
-                    dataGridView.DataSource = proionTable;
-                    dataGridView.Columns[0].Width = 250;
-                    dataGridView.Columns[0].HeaderText = "Όνομα";
-
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed)
-                        con.Close();
-                }
-            }
-            else {
-                try {
-                    con.Open();
+                else {
                     dataReader = ProiontaCmd.ExecuteReader();
                     proionTable.Load(dataReader);
-                    dataReader.Close();
                     ProiontaCmd.Dispose();
-                    dataGridView.DataSource = proionTable;
-                    dataGridView.Columns[0].Width = 250;
-                    dataGridView.Columns[0].HeaderText = "Όνομα";
-
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed)
-                        con.Close();
-                }
+                dataReader.Close();
+                dataGridView.DataSource = proionTable;
+                dataGridView.Columns[0].Width = 250;
+                dataGridView.Columns[0].HeaderText = "Όνομα";
             }
-
+            catch (SqlException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
+            }
         }
 
-        private void showSxeseis_Click(object sender, EventArgs e, String text) {
+        private void showSxeseis(String text) {
+            text = text.Trim();
             sxesiTable.Clear();
-
-            if (text != "") {
-                int num;
-                if (int.TryParse(text, out num)) {
-                    try {
-                        con.Open();
+            try {
+                con.Open();
+                //if there is text search by text or else return everything
+                if (text != "") {
+                    //if text is number search by id or else search by something else
+                    int num;
+                    if (int.TryParse(text, out num)) {
                         SxeseisByKoutiIdCmd.Parameters["@KoutiId"].Value = num;
                         dataReader = SxeseisByKoutiIdCmd.ExecuteReader();
                         sxesiTable.Load(dataReader);
-                        dataReader.Close();
                         SxeseisByKoutiIdCmd.Dispose();
-                        dataGridView.DataSource = sxesiTable;
-                        dataGridView.Columns[0].Width = 50;
-                        dataGridView.Columns[1].Width = 200;
-                        dataGridView.Columns[0].HeaderText = "Αριθμός";
-                        dataGridView.Columns[1].HeaderText = "Τοποθεσία";
-
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally {
-                        if (con.State != ConnectionState.Closed)
-                            con.Close();
-                    }
-                }
-                else {
-                    try {
-                        String name = text;
-                        name = name.Trim();
-                        con.Open();
+                    else {
+                        //first search by product name
                         foreach (String s in productStrings) {
-                            if (s.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) {
-
+                            if (s.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                                 SxeseisByProionNameCmd.Parameters["@ProionName"].Value = s;
                                 dataReader = SxeseisByProionNameCmd.ExecuteReader();
                                 sxesiTable.Load(dataReader);
                             }
                         }
-
-                        dataReader.Close();
                         SxeseisByProionNameCmd.Dispose();
+                        //if no match is found try searching by location
                         if (sxesiTable.Rows.Count == 0) {
                             foreach (String s in locationStrings) {
-                                if (s.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0) {
-
+                                if (s.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0) {
                                     SxeseisByKoutiLocationCmd.Parameters["@KoutiLocation"].Value = s;
                                     dataReader = SxeseisByKoutiLocationCmd.ExecuteReader();
                                     sxesiTable.Load(dataReader);
                                 }
                             }
+                            SxeseisByKoutiLocationCmd.Dispose();
                         }
-                        sxesiTable.DefaultView.Sort = "KoutiId asc";
-                        dataGridView.DataSource = sxesiTable;
-                        dataGridView.Columns[0].Width = 50;
-                        dataGridView.Columns[1].Width = 230;
-                        dataGridView.Columns[2].Width = 130;
-                        dataGridView.Columns[0].HeaderText = "Κουτί";
-                        dataGridView.Columns[1].HeaderText = "Προϊόν";
-                        dataGridView.Columns[2].HeaderText = "Τοποθεσία";
-
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    con.Close();
-
                 }
-            }
-            else {
-                try {
-                    con.Open();
+                else {
                     dataReader = SxeseisCmd.ExecuteReader();
                     sxesiTable.Load(dataReader);
-                    dataReader.Close();
                     SxeseisCmd.Dispose();
-                    dataGridView.DataSource = sxesiTable;
-                    dataGridView.Columns[0].Width = 50;
-                    dataGridView.Columns[1].Width = 230;
-                    dataGridView.Columns[2].Width = 130;
-                    dataGridView.Columns[0].HeaderText = "Κουτί";
-                    dataGridView.Columns[1].HeaderText = "Προϊόν";
-                    dataGridView.Columns[2].HeaderText = "Τοποθεσία";
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed)
-                        con.Close();
-                }
+                dataReader.Close();
+                sxesiTable.DefaultView.Sort = "KoutiId asc";
+                dataGridView.DataSource = sxesiTable;
+                dataGridView.Columns[0].Width = 50;
+                dataGridView.Columns[1].Width = 230;
+                dataGridView.Columns[2].Width = 130;
+                dataGridView.Columns[0].HeaderText = "Κουτί";
+                dataGridView.Columns[1].HeaderText = "Προϊόν";
+                dataGridView.Columns[2].HeaderText = "Τοποθεσία";
+            }
+            catch (SqlException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
             }
         }
 
         private void searchSxeseisTextBox_TextChanged(object sender, EventArgs e) {
-
-            if (radioKoutia.Checked == true) {
-                showKoutia_Click(null, null, searchSxeseisTextBox.Text);
-            }
-            else if (radioProionta.Checked == true) {
-                showProionta_Click(null, null, searchSxeseisTextBox.Text);
-            }
-            else {
-                showSxeseis_Click(null, null, searchSxeseisTextBox.Text);
-            }
-
-
+            if (radioKoutia.Checked == true)
+                showKoutia(searchSxeseisTextBox.Text);
+            else if (radioProionta.Checked == true)
+                showProionta(searchSxeseisTextBox.Text);
+            else
+                showSxeseis(searchSxeseisTextBox.Text);
         }
-        public void updateDataGridViewByKouti() {
+
+        public void updateDataGridViewByKoutia() {
             radioKoutia.Checked = true;
-            updateLocationStrings();
             searchSxeseisTextBox_TextChanged(null, null);
         }
 
-        public void updateDataGridViewByProion() {
+        public void updateDataGridViewByProionta() {
             radioProionta.Checked = true;
-            updateProductStrings();
             searchSxeseisTextBox_TextChanged(null, null);
         }
 
-        public void updateDataGridView() {
+        public void updateDataGridViewBySxeseis() {
             radioSxeseis.Checked = true;
-            updateProductStrings();
             searchSxeseisTextBox_TextChanged(null, null);
         }
 
         private void updateLocationStrings() {
-            locationStrings = new List<string>();
+            locationStrings.Clear();
             try {
                 con.Open();
                 dataReader = locationStringsCmd.ExecuteReader();
@@ -403,17 +301,13 @@ namespace Apothiki {
         }
 
         private void updateProductStrings() {
-
-            productStrings = new List<string>();
-
+            productStrings.Clear();
             try {
                 con.Open();
                 dataReader = ProiontaCmd.ExecuteReader();
-
                 if (dataReader.HasRows)
                     while (dataReader.Read())
                         productStrings.Add(dataReader.GetString(0));
-
                 dataReader.Close();
                 ProiontaCmd.Dispose();
             }
@@ -427,56 +321,70 @@ namespace Apothiki {
         }
 
         private void initStrings() {
-
+            //Sql Connection String
             conString = Apothiki.Properties.Settings.Default.ApothikiConnectionString;
 
-            KoutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
-            KoutiaByIdCmdString = "SELECT * FROM KOUTI WHERE (Id=@Id) ORDER BY Id";
-            KoutiaByLocationCmdString = "SELECT * FROM KOUTI WHERE (Location=@Location) ORDER BY Id";
+            //Koutia Cmd Strings
+            koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
+            koutiaByIdCmdString = "SELECT * FROM KOUTI WHERE (Id=@Id) ORDER BY Id";
+            koutiaByLocationCmdString = "SELECT * FROM KOUTI WHERE (Location=@Location) ORDER BY Id";
 
-            ProiontaCmdString = "SELECT * FROM Proion ORDER BY Name";
-            ProiontaByNameCmdString = "SELECT * FROM Proion WHERE (Name=@Name) ORDER BY Name";
+            //Proionta Cmd Strings
+            proiontaCmdString = "SELECT * FROM Proion ORDER BY Name";
+            proiontaByNameCmdString = "SELECT * FROM Proion WHERE (Name=@Name) ORDER BY Name";
 
-            SxeseisCmdString = "SELECT * FROM SXESI ORDER BY KoutiId";
-            SxeseisByProionNameCmdString = "SELECT * FROM SXESI WHERE (ProionName=@ProionName) ORDER BY KoutiId";
-            SxeseisByKoutiLocationCmdString = "SELECT * FROM SXESI WHERE (KoutiLocation=@KoutiLocation) ORDER BY KoutiId";
-            SxeseisByKoutiIdCmdString = "SELECT * FROM SXESI WHERE (KoutiId=@KoutiId) ORDER BY KoutiId";
+            //Sxeseis Cmd Strings
+            sxeseisCmdString = "SELECT * FROM SXESI ORDER BY KoutiId";
+            sxeseisByProionNameCmdString = "SELECT * FROM SXESI WHERE (ProionName=@ProionName) ORDER BY KoutiId";
+            sxeseisByKoutiLocationCmdString = "SELECT * FROM SXESI WHERE (KoutiLocation=@KoutiLocation) ORDER BY KoutiId";
+            sxeseisByKoutiIdCmdString = "SELECT * FROM SXESI WHERE (KoutiId=@KoutiId) ORDER BY KoutiId";
+
+            //Helper Cmd String for locationStrings list
+            locationStringsCmdString = "SELECT COUNT(Id), Location FROM Kouti GROUP BY Location ORDER BY Location";
         }
 
         private void initCmds() {
-            //Koutia
-            KoutiaCmd = new SqlCommand(KoutiaCmdString, con);
+            //Init SqlConnection
+            con = new SqlConnection(conString);
 
-            KoutiaByIdCmd = new SqlCommand(KoutiaByIdCmdString, con);
+            //Koutia Cmds
+            KoutiaCmd = new SqlCommand(koutiaCmdString, con);
+
+            KoutiaByIdCmd = new SqlCommand(koutiaByIdCmdString, con);
             KoutiaByIdCmd.Parameters.Add("@Id", SqlDbType.Int);
 
-            KoutiaByLocationCmd = new SqlCommand(KoutiaByLocationCmdString, con);
+            KoutiaByLocationCmd = new SqlCommand(koutiaByLocationCmdString, con);
             KoutiaByLocationCmd.Parameters.Add("@Location", SqlDbType.NVarChar);
 
-            //Proionta
-            ProiontaCmd = new SqlCommand(ProiontaCmdString, con);
+            //Proionta Cmds
+            ProiontaCmd = new SqlCommand(proiontaCmdString, con);
 
-            ProiontaByNameCmd = new SqlCommand(ProiontaByNameCmdString, con);
+            ProiontaByNameCmd = new SqlCommand(proiontaByNameCmdString, con);
             ProiontaByNameCmd.Parameters.Add("@Name", SqlDbType.NVarChar);
 
-            //Sxeseis
-            SxeseisCmd = new SqlCommand(SxeseisCmdString, con);
+            //Sxeseis Cmds
+            SxeseisCmd = new SqlCommand(sxeseisCmdString, con);
 
-            SxeseisByKoutiIdCmd = new SqlCommand(SxeseisByKoutiIdCmdString, con);
+            SxeseisByKoutiIdCmd = new SqlCommand(sxeseisByKoutiIdCmdString, con);
             SxeseisByKoutiIdCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
 
-            SxeseisByProionNameCmd = new SqlCommand(SxeseisByProionNameCmdString, con);
+            SxeseisByProionNameCmd = new SqlCommand(sxeseisByProionNameCmdString, con);
             SxeseisByProionNameCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
 
-            SxeseisByKoutiLocationCmd = new SqlCommand(SxeseisByKoutiLocationCmdString, con);
+            SxeseisByKoutiLocationCmd = new SqlCommand(sxeseisByKoutiLocationCmdString, con);
             SxeseisByKoutiLocationCmd.Parameters.Add("@KoutiLocation", SqlDbType.NVarChar);
 
-            // Helper for locationstrings
-            locationStringsCmd = new SqlCommand("SELECT COUNT(Id), Location FROM Kouti GROUP BY Location ORDER BY Location", con);
+            //Helper Cmd for locationStrings list
+            locationStringsCmd = new SqlCommand(locationStringsCmdString, con);
 
+            //Init tables
             koutiTable = new ApothikiDataSet.KoutiDataTable();
             proionTable = new ApothikiDataSet.ProionDataTable();
             sxesiTable = new ApothikiDataSet.SxesiDataTable();
+
+            //Init Lists
+            productStrings = new List<string>();
+            locationStrings = new List<string>();
         }
     }
 }

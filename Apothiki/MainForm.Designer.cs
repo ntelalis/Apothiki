@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.radioSxeseis = new System.Windows.Forms.RadioButton();
+            this.radioProionta = new System.Windows.Forms.RadioButton();
+            this.radioKoutia = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.searchSxeseisTextBox = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -45,14 +48,7 @@
             this.διαγραφήToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.delKouti = new System.Windows.Forms.ToolStripMenuItem();
             this.delProion = new System.Windows.Forms.ToolStripMenuItem();
-            this.προβολήToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showKoutia = new System.Windows.Forms.ToolStripMenuItem();
-            this.showProionta = new System.Windows.Forms.ToolStripMenuItem();
-            this.showSxeseis = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.radioKoutia = new System.Windows.Forms.RadioButton();
-            this.radioProionta = new System.Windows.Forms.RadioButton();
-            this.radioSxeseis = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -89,6 +85,41 @@
             this.splitContainer1.SplitterDistance = 161;
             this.splitContainer1.TabIndex = 0;
             // 
+            // radioSxeseis
+            // 
+            this.radioSxeseis.AutoSize = true;
+            this.radioSxeseis.Checked = true;
+            this.radioSxeseis.Location = new System.Drawing.Point(328, 46);
+            this.radioSxeseis.Name = "radioSxeseis";
+            this.radioSxeseis.Size = new System.Drawing.Size(66, 17);
+            this.radioSxeseis.TabIndex = 5;
+            this.radioSxeseis.TabStop = true;
+            this.radioSxeseis.Text = "Σχέσεις";
+            this.radioSxeseis.UseVisualStyleBackColor = true;
+            this.radioSxeseis.CheckedChanged += new System.EventHandler(this.radioSxeseis_CheckedChanged);
+            // 
+            // radioProionta
+            // 
+            this.radioProionta.AutoSize = true;
+            this.radioProionta.Location = new System.Drawing.Point(328, 92);
+            this.radioProionta.Name = "radioProionta";
+            this.radioProionta.Size = new System.Drawing.Size(73, 17);
+            this.radioProionta.TabIndex = 4;
+            this.radioProionta.Text = "Προϊόντα";
+            this.radioProionta.UseVisualStyleBackColor = true;
+            this.radioProionta.CheckedChanged += new System.EventHandler(this.radioProionta_CheckedChanged);
+            // 
+            // radioKoutia
+            // 
+            this.radioKoutia.AutoSize = true;
+            this.radioKoutia.Location = new System.Drawing.Point(328, 69);
+            this.radioKoutia.Name = "radioKoutia";
+            this.radioKoutia.Size = new System.Drawing.Size(59, 17);
+            this.radioKoutia.TabIndex = 3;
+            this.radioKoutia.Text = "Κουτιά";
+            this.radioKoutia.UseVisualStyleBackColor = true;
+            this.radioKoutia.CheckedChanged += new System.EventHandler(this.radioKoutia_CheckedChanged);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -112,8 +143,7 @@
             this.διαχείρησηToolStripMenuItem,
             this.δημιουργίαToolStripMenuItem,
             this.αλλαγήToolStripMenuItem,
-            this.διαγραφήToolStripMenuItem,
-            this.προβολήToolStripMenuItem});
+            this.διαγραφήToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(471, 24);
@@ -212,38 +242,6 @@
             this.delProion.Text = "Προϊόν";
             this.delProion.Click += new System.EventHandler(this.delProion_Click);
             // 
-            // προβολήToolStripMenuItem
-            // 
-            this.προβολήToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showKoutia,
-            this.showProionta,
-            this.showSxeseis});
-            this.προβολήToolStripMenuItem.Name = "προβολήToolStripMenuItem";
-            this.προβολήToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
-            this.προβολήToolStripMenuItem.Text = "Προβολή";
-            this.προβολήToolStripMenuItem.Visible = false;
-            // 
-            // showKoutia
-            // 
-            this.showKoutia.Name = "showKoutia";
-            this.showKoutia.Size = new System.Drawing.Size(152, 22);
-            this.showKoutia.Text = "Κουτιά";
-            //this.showKoutia.Click += new System.EventHandler(this.showKoutia_Click);
-            // 
-            // showProionta
-            // 
-            this.showProionta.Name = "showProionta";
-            this.showProionta.Size = new System.Drawing.Size(152, 22);
-            this.showProionta.Text = "Προϊόντα";
-            //this.showProionta.Click += new System.EventHandler(this.showProionta_Click);
-            // 
-            // showSxeseis
-            // 
-            this.showSxeseis.Name = "showSxeseis";
-            this.showSxeseis.Size = new System.Drawing.Size(152, 22);
-            this.showSxeseis.Text = "Σχέσεις";
-            //this.showSxeseis.Click += new System.EventHandler(this.showSxeseis_Click);
-            // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
@@ -255,41 +253,6 @@
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.Size = new System.Drawing.Size(471, 256);
             this.dataGridView.TabIndex = 0;
-            // 
-            // radioKoutia
-            // 
-            this.radioKoutia.AutoSize = true;
-            this.radioKoutia.Location = new System.Drawing.Point(328, 69);
-            this.radioKoutia.Name = "radioKoutia";
-            this.radioKoutia.Size = new System.Drawing.Size(59, 17);
-            this.radioKoutia.TabIndex = 3;
-            this.radioKoutia.Text = "Κουτιά";
-            this.radioKoutia.UseVisualStyleBackColor = true;
-            this.radioKoutia.CheckedChanged += new System.EventHandler(this.radioKoutia_CheckedChanged);
-            // 
-            // radioProionta
-            // 
-            this.radioProionta.AutoSize = true;
-            this.radioProionta.Location = new System.Drawing.Point(328, 92);
-            this.radioProionta.Name = "radioProionta";
-            this.radioProionta.Size = new System.Drawing.Size(73, 17);
-            this.radioProionta.TabIndex = 4;
-            this.radioProionta.Text = "Προϊόντα";
-            this.radioProionta.UseVisualStyleBackColor = true;
-            this.radioProionta.CheckedChanged += new System.EventHandler(this.radioProionta_CheckedChanged);
-            // 
-            // radioSxeseis
-            // 
-            this.radioSxeseis.AutoSize = true;
-            this.radioSxeseis.Checked = true;
-            this.radioSxeseis.Location = new System.Drawing.Point(328, 46);
-            this.radioSxeseis.Name = "radioSxeseis";
-            this.radioSxeseis.Size = new System.Drawing.Size(66, 17);
-            this.radioSxeseis.TabIndex = 5;
-            this.radioSxeseis.TabStop = true;
-            this.radioSxeseis.Text = "Σχέσεις";
-            this.radioSxeseis.UseVisualStyleBackColor = true;
-            this.radioSxeseis.CheckedChanged += new System.EventHandler(this.radioSxeseis_CheckedChanged);
             // 
             // MainForm
             // 
@@ -331,10 +294,6 @@
         private System.Windows.Forms.ToolStripMenuItem διαγραφήToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem delKouti;
         private System.Windows.Forms.ToolStripMenuItem delProion;
-        private System.Windows.Forms.ToolStripMenuItem προβολήToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showKoutia;
-        private System.Windows.Forms.ToolStripMenuItem showProionta;
-        private System.Windows.Forms.ToolStripMenuItem showSxeseis;
         private System.Windows.Forms.ToolStripMenuItem αλλαγήToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeKouti;
         private System.Windows.Forms.ToolStripMenuItem changeProion;
