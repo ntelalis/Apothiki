@@ -10,34 +10,26 @@ namespace Apothiki {
     }
     public partial class ChangeDialog : Form {
 
-        String proiontaCmdString, changeProionCmdString, koutiaCmdString, changeKoutiString, koutiByIdString;
-
         SqlConnection con;
-        SqlCommand proiontaCmd, changeProionCmd, koutiaCmd, changeKouti, koutiById;
         SqlDataReader dataReader;
+        ChangeDialogType changeDialogType;
 
-        private void ChangeDialog_Load(object sender, EventArgs e) {
-            comboBox1_SelectedIndexChanged(null, null);
-        }
-
-        ApothikiDataSet.ProionDataTable proionTable;
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            updateOldValue();
-        }
+        String proiontaCmdString, changeProionCmdString, koutiaCmdString, changeKoutiString, koutiByIdString;
+        SqlCommand proiontaCmd, changeProionCmd, koutiaCmd, changeKouti, koutiById;
 
         ApothikiDataSet.KoutiDataTable koutiTable1, koutiTable2;
-        ChangeDialogType changeDialogType;
+        ApothikiDataSet.ProionDataTable proionTable;
+
         public ChangeDialog(ChangeDialogType changeDialogType, SqlConnection con) {
             InitializeComponent();
             this.con = con;
             this.changeDialogType = changeDialogType;
             if (changeDialogType == ChangeDialogType.Kouti) {
 
-                this.comboBox1.Size = new System.Drawing.Size(64, 21);
+                this.comboBox1.Size = new System.Drawing.Size(64, 20);
                 this.textBox2.Location = new System.Drawing.Point(160, 86);
                 this.textBox2.Size = new System.Drawing.Size(179, 20);
-                this.textBox3.Size = new System.Drawing.Size(64, 21);
+                this.textBox3.Size = new System.Drawing.Size(64, 20);
                 this.label2.Location = new System.Drawing.Point(157, 66);
                 label3.Visible = true;
                 textBox1.Visible = true;
@@ -80,6 +72,15 @@ namespace Apothiki {
                 fillCombobox();
             }
         }
+
+        private void ChangeDialog_Load(object sender, EventArgs e) {
+            comboBox1_SelectedIndexChanged(null, null);
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+            updateOldValue();
+        }
+
         private void fillCombobox() {
             if (changeDialogType == ChangeDialogType.Kouti) {
                 koutiTable1.Clear();

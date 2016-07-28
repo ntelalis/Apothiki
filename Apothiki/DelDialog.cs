@@ -62,21 +62,27 @@ namespace Apothiki {
 
         private void OKButton_Click(object sender, EventArgs e) {
 
-            result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να το διαγράψετε;", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question,MessageBoxDefaultButton.Button2);
+            result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να το διαγράψετε;", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
             if (result.Equals(DialogResult.Yes)) {
 
                 if (delDialogType == DelDialogType.Kouti) {
-                    int id = Int32.Parse(comboBox1.Text);
-                    delKoutiCmd.Parameters["@Id"].Value = id;
-
                     try {
-                        con.Open();
-                        int rowsAffected = delKoutiCmd.ExecuteNonQuery();
-                        if (rowsAffected == 1)
-                            MessageBox.Show("Το κουτί " + id + " διαγράφηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        int id = Int32.Parse(comboBox1.Text);
+                        delKoutiCmd.Parameters["@Id"].Value = id;
+                        try {
+                            con.Open();
+                            int rowsAffected = delKoutiCmd.ExecuteNonQuery();
+                            if (rowsAffected == 1)
+                                MessageBox.Show("Το κουτί " + id + " διαγράφηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            else
+                                MessageBox.Show("Το κουτί " + id + " δε βρέθηκε στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        catch (SqlException sqlEx) {
+                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (FormatException) {
+                        MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally {
                         if (con.State != ConnectionState.Closed)
@@ -93,6 +99,8 @@ namespace Apothiki {
                         int rowsAffected = delProionCmd.ExecuteNonQuery();
                         if (rowsAffected == 1)
                             MessageBox.Show("Το προϊόν \"" + name + "\" διαγράφηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else
+                            MessageBox.Show("Το προϊόν \"" + name + "\" δε βρέθηκε στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                     catch (SqlException sqlEx) {
                         MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

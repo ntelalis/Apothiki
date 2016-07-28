@@ -110,6 +110,71 @@ namespace Apothiki {
             showProionta(searchSxeseisTextBox.Text);
         }
 
+        private void searchSxeseisTextBox_TextChanged(object sender, EventArgs e) {
+            if (radioKoutia.Checked == true)
+                showKoutia(searchSxeseisTextBox.Text);
+            else if (radioProionta.Checked == true)
+                showProionta(searchSxeseisTextBox.Text);
+            else
+                showSxeseis(searchSxeseisTextBox.Text);
+        }
+
+        public void updateDataGridViewByKoutia() {
+            radioKoutia.Checked = true;
+            searchSxeseisTextBox_TextChanged(null, null);
+        }
+
+        public void updateDataGridViewByProionta() {
+            radioProionta.Checked = true;
+            searchSxeseisTextBox_TextChanged(null, null);
+        }
+
+        public void updateDataGridViewBySxeseis() {
+            radioSxeseis.Checked = true;
+            searchSxeseisTextBox_TextChanged(null, null);
+        }
+
+        private void updateLocationStrings() {
+            locationStrings.Clear();
+            try {
+                con.Open();
+                dataReader = locationStringsCmd.ExecuteReader();
+                if (dataReader.HasRows)
+                    while (dataReader.Read())
+                        locationStrings.Add(dataReader.GetString(1));
+
+                dataReader.Close();
+                locationStringsCmd.Dispose();
+            }
+            catch (SqlException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
+            }
+        }
+
+        private void updateProductStrings() {
+            productStrings.Clear();
+            try {
+                con.Open();
+                dataReader = ProiontaCmd.ExecuteReader();
+                if (dataReader.HasRows)
+                    while (dataReader.Read())
+                        productStrings.Add(dataReader.GetString(0));
+                dataReader.Close();
+                ProiontaCmd.Dispose();
+            }
+            catch (SqlException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
+            }
+        }
+
         private void showKoutia(String text) {
             text = text.Trim();
             koutiTable.Clear();
@@ -245,71 +310,6 @@ namespace Apothiki {
                 dataGridView.Columns[0].HeaderText = "Κουτί";
                 dataGridView.Columns[1].HeaderText = "Προϊόν";
                 dataGridView.Columns[2].HeaderText = "Τοποθεσία";
-            }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
-            }
-        }
-
-        private void searchSxeseisTextBox_TextChanged(object sender, EventArgs e) {
-            if (radioKoutia.Checked == true)
-                showKoutia(searchSxeseisTextBox.Text);
-            else if (radioProionta.Checked == true)
-                showProionta(searchSxeseisTextBox.Text);
-            else
-                showSxeseis(searchSxeseisTextBox.Text);
-        }
-
-        public void updateDataGridViewByKoutia() {
-            radioKoutia.Checked = true;
-            searchSxeseisTextBox_TextChanged(null, null);
-        }
-
-        public void updateDataGridViewByProionta() {
-            radioProionta.Checked = true;
-            searchSxeseisTextBox_TextChanged(null, null);
-        }
-
-        public void updateDataGridViewBySxeseis() {
-            radioSxeseis.Checked = true;
-            searchSxeseisTextBox_TextChanged(null, null);
-        }
-
-        private void updateLocationStrings() {
-            locationStrings.Clear();
-            try {
-                con.Open();
-                dataReader = locationStringsCmd.ExecuteReader();
-                if (dataReader.HasRows)
-                    while (dataReader.Read())
-                        locationStrings.Add(dataReader.GetString(1));
-
-                dataReader.Close();
-                locationStringsCmd.Dispose();
-            }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
-            }
-        }
-
-        private void updateProductStrings() {
-            productStrings.Clear();
-            try {
-                con.Open();
-                dataReader = ProiontaCmd.ExecuteReader();
-                if (dataReader.HasRows)
-                    while (dataReader.Read())
-                        productStrings.Add(dataReader.GetString(0));
-                dataReader.Close();
-                ProiontaCmd.Dispose();
             }
             catch (SqlException sqlEx) {
                 MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

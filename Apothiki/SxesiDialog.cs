@@ -164,38 +164,42 @@ namespace Apothiki {
 
         private void OKButton_Click(object sender, EventArgs e) {
             if (sxesiDialogType == SxesiDialogType.Import) {
-
-                int koutiId = Int32.Parse(comboBox1.Text);
-                String proionName = comboBox2.Text;
-                newSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
-                newSxesiCmd.Parameters["@ProionName"].Value = proionName;
-                koutiByIdCmd.Parameters["@Id"].Value = newSxesiCmd.Parameters["@KoutiId"].Value;
                 try {
-                    con.Open();
-                    dataReader = koutiByIdCmd.ExecuteReader();
-                    if (dataReader.HasRows) {
-                        dataReader.Read();
-                        newSxesiCmd.Parameters["@KoutiLocation"].Value = dataReader.GetString(1);
-                        dataReader.Close();
+                    int koutiId = Int32.Parse(comboBox1.Text);
+                    String proionName = comboBox2.Text;
+                    newSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
+                    newSxesiCmd.Parameters["@ProionName"].Value = proionName;
+                    koutiByIdCmd.Parameters["@Id"].Value = newSxesiCmd.Parameters["@KoutiId"].Value;
+                    try {
+                        con.Open();
+                        dataReader = koutiByIdCmd.ExecuteReader();
                         koutiByIdCmd.Dispose();
+                        if (dataReader.HasRows) {
+                            dataReader.Read();
+                            newSxesiCmd.Parameters["@KoutiLocation"].Value = dataReader.GetString(1);
+                        }
+                        else {
+                            newSxesiCmd.Parameters["@KoutiLocation"].Value = "";
+                        }
+                        dataReader.Close();
+                        int rowsAffected = newSxesiCmd.ExecuteNonQuery();
+                        newSxesiCmd.Dispose();
+                        if (rowsAffected == 1)
+                            MessageBox.Show("Η εισαγωγή του προϊόντος \"" + proionName + "\" στο κουτί " + koutiId + " ολοκληρώθηκε με επιτυχία.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        else
+                            MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    else {
-                        newSxesiCmd.Parameters["@KoutiLocation"].Value = "";
+                    catch (SqlException sqlEx) {
+                        if (sqlEx.Number == 2627)
+                            MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else if (sqlEx.Number == 547)
+                            MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που εισάγατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        else
+                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-
-                    int rowsAffected = newSxesiCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1)
-                        MessageBox.Show("Η εισαγωγή του προϊόντος \"" + proionName + "\" στο κουτί " + koutiId + " ολοκληρώθηκε με επιτυχία.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    else
-                        MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch (SqlException sqlEx) {
-                    if (sqlEx.Number == 2627) {
-                        MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                catch (FormatException) {
+                    MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -203,32 +207,38 @@ namespace Apothiki {
                 }
             }
             else if (sxesiDialogType == SxesiDialogType.Export) {
-
-                int koutiId = Int32.Parse(comboBox1.Text);
-                string proionName = comboBox2.Text;
-                delSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
-                delSxesiCmd.Parameters["@ProionName"].Value = proionName;
-
                 try {
-                    con.Open();
-                    int rowsAffected = delSxesiCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1) {
-                        MessageBox.Show("Η εξαγωγή ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    int koutiId = Int32.Parse(comboBox1.Text);
+                    string proionName = comboBox2.Text;
+                    delSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
+                    delSxesiCmd.Parameters["@ProionName"].Value = proionName;
+
+                    try {
+                        con.Open();
+                        int rowsAffected = delSxesiCmd.ExecuteNonQuery();
+                        con.Close();
+                        if (rowsAffected == 1) {
+                            MessageBox.Show("Η εξαγωγή ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else if (rowsAffected == 0) {
+                            MessageBox.Show("Η εξαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που εισάγατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        }
+                        fillComboBoxes();
+                        comboBox1_SelectedIndexChanged(null, null);
+                        updateOKButton();
+
                     }
-                    else if (rowsAffected == 0) {
-                        MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (SqlException sqlEx) {
+                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (FormatException) {
+                    MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
                         con.Close();
                 }
-                fillComboBoxes();
-                comboBox1_SelectedIndexChanged(null, null);
-                updateOKButton();
             }
             ((MainForm)this.Owner).updateDataGridViewBySxeseis();
         }

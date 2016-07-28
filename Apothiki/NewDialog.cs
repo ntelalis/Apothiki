@@ -138,7 +138,7 @@ namespace Apothiki {
                 newProion();
                 ((MainForm)this.Owner).updateDataGridViewByProionta();
             }
-            
+
         }
     }
 }
