@@ -178,7 +178,7 @@ namespace Apothiki {
                         try {
                             con.Open();
                             int rowsAffected = changeKouti.ExecuteNonQuery();
-                            if (rowsAffected == 2) {
+                            if (!(rowsAffected == 0)) {
                                 if (oldid == newid)
                                     MessageBox.Show("Η τοποθεσία του κουτιού " + oldid + " άλλαξε σε \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 else if (newLocation == textBox1.Text)
