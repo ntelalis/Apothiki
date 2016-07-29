@@ -178,6 +178,7 @@ namespace Apothiki {
                         try {
                             con.Open();
                             int rowsAffected = changeKouti.ExecuteNonQuery();
+                            //trigger affects multiple rows
                             if (!(rowsAffected == 0)) {
                                 if (oldid == newid)
                                     MessageBox.Show("Η τοποθεσία του κουτιού " + oldid + " άλλαξε σε \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);

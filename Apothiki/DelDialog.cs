@@ -62,10 +62,9 @@ namespace Apothiki {
 
         private void OKButton_Click(object sender, EventArgs e) {
 
-            result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να το διαγράψετε;", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-            if (result.Equals(DialogResult.Yes)) {
-
-                if (delDialogType == DelDialogType.Kouti) {
+            if (delDialogType == DelDialogType.Kouti) {
+                result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result.Equals(DialogResult.Yes)) {
                     try {
                         int id = Int32.Parse(comboBox1.Text);
                         delKoutiCmd.Parameters["@Id"].Value = id;
@@ -89,8 +88,10 @@ namespace Apothiki {
                             con.Close();
                     }
                 }
-                else if (delDialogType == DelDialogType.Proion) {
-
+            }
+            else if (delDialogType == DelDialogType.Proion) {
+                result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το προϊόν \"" + comboBox1.Text + "\";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (result.Equals(DialogResult.Yes)) {
                     String name = comboBox1.Text;
                     delProionCmd.Parameters["@Name"].Value = name;
 
@@ -110,10 +111,9 @@ namespace Apothiki {
                             con.Close();
                     }
                 }
-                fillComboBox();
-                ((MainForm)this.Owner).updateDataGridViewBySxeseis();
             }
-
+            fillComboBox();
+            ((MainForm)this.Owner).updateDataGridViewBySxeseis();
         }
 
         private void fillComboBox() {
