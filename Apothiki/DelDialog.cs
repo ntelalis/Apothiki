@@ -11,27 +11,27 @@ namespace Apothiki {
 
     public partial class DelDialog : Form {
 
+        SqlConnection con;
+        DelDialogType delDialogType;
+
         String delKoutiCmdString, delProionCmdString;
         String koutiaCmdString, proiontaCmdString;
         SqlCommand delKoutiCmd, delProionCmd;
         SqlCommand koutiaCmd, proiontaCmd;
-        SqlConnection con;
-        SqlDataReader dataReader;
-        DelDialogType delDialogType;
-        DialogResult result;
+
         ApothikiDataSet.KoutiDataTable koutiTable;
         ApothikiDataSet.ProionDataTable proionTable;
+        SqlDataReader dataReader;
 
         public DelDialog(DelDialogType delDialogType, SqlConnection con) {
-
-            this.con = con;
+            InitializeComponent();
             this.delDialogType = delDialogType;
+            this.con = con;
 
             if (delDialogType == DelDialogType.Kouti) {
-                InitializeComponent();
-                this.comboBox1.Size = new System.Drawing.Size(64, 21);
                 this.Text = "Διαγραφή κουτιού";
                 this.label1.Text = "Αριθμός Κουτιού";
+                this.comboBox1.Size = new System.Drawing.Size(64, 21);
 
                 delKoutiCmdString = "DELETE FROM KOUTI WHERE (Id=@Id)";
                 delKoutiCmd = new SqlCommand(delKoutiCmdString, con);
@@ -40,13 +40,11 @@ namespace Apothiki {
                 koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
                 koutiaCmd = new SqlCommand(koutiaCmdString, con);
                 koutiTable = new ApothikiDataSet.KoutiDataTable();
-
             }
             else if (delDialogType == DelDialogType.Proion) {
-                InitializeComponent();
-                this.comboBox1.Size = new System.Drawing.Size(224, 21);
                 this.Text = "Διαγραφή προϊόντος";
                 this.label1.Text = "Όνομα προϊόντος";
+                this.comboBox1.Size = new System.Drawing.Size(224, 21);
 
                 delProionCmdString = "DELETE FROM PROION WHERE (Name=@Name)";
                 delProionCmd = new SqlCommand(delProionCmdString, con);
@@ -55,15 +53,13 @@ namespace Apothiki {
                 proiontaCmdString = "SELECT * FROM PROION ORDER BY Name";
                 proiontaCmd = new SqlCommand(proiontaCmdString, con);
                 proionTable = new ApothikiDataSet.ProionDataTable();
-
             }
             fillComboBox();
         }
 
         private void OKButton_Click(object sender, EventArgs e) {
-
             if (delDialogType == DelDialogType.Kouti) {
-                result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result.Equals(DialogResult.Yes)) {
                     try {
                         int id = Int32.Parse(comboBox1.Text);
@@ -90,11 +86,10 @@ namespace Apothiki {
                 }
             }
             else if (delDialogType == DelDialogType.Proion) {
-                result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το προϊόν \"" + comboBox1.Text + "\";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το προϊόν \"" + comboBox1.Text + "\";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result.Equals(DialogResult.Yes)) {
                     String name = comboBox1.Text;
                     delProionCmd.Parameters["@Name"].Value = name;
-
                     try {
                         con.Open();
                         int rowsAffected = delProionCmd.ExecuteNonQuery();
@@ -118,7 +113,6 @@ namespace Apothiki {
 
         private void fillComboBox() {
             if (delDialogType == DelDialogType.Kouti) {
-
                 koutiTable.Clear();
                 try {
                     con.Open();
@@ -140,7 +134,6 @@ namespace Apothiki {
                 }
             }
             else if (delDialogType == DelDialogType.Proion) {
-
                 proionTable.Clear();
                 try {
                     con.Open();
@@ -161,10 +154,17 @@ namespace Apothiki {
                         con.Close();
                 }
             }
+        }
+
+        private void comboBox1_TextUpdate(object sender, EventArgs e) {
             if (comboBox1.Text == "")
                 OKButton.Enabled = false;
             else
                 OKButton.Enabled = true;
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+            comboBox1_TextUpdate(null, null);
         }
     }
 }

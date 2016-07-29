@@ -11,24 +11,24 @@ namespace Apothiki {
 
     public partial class NewDialog : Form {
 
+        SqlConnection con;
+        NewDialogType newDialogType;
+
         String newKoutiCmdString, newProionCmdString;
         SqlCommand newKoutiCmd, newProionCmd;
-        SqlConnection con;
 
         public NewDialog(NewDialogType newDialogType, SqlConnection con) {
-
             InitializeComponent();
+            this.newDialogType = newDialogType;
             this.con = con;
 
             if (newDialogType == NewDialogType.Kouti) {
-
                 this.Text = "Νέο Κουτί";
                 this.label1.Text = "Αριθμός κουτιού";
                 this.label2.Text = "Τοποθεσία (Προαιρετικό)";
                 this.label2.Visible = true;
+                this.textBox2.Visible = true;
                 this.textBox1.Size = new System.Drawing.Size(64, 21);
-                textBox2.Visible = true;
-
                 this.ActiveControl = textBox1;
 
                 newKoutiCmdString = "INSERT INTO KOUTI (Id,Location) VALUES (@Id,@Location)";
@@ -37,7 +37,6 @@ namespace Apothiki {
                 newKoutiCmd.Parameters.Add("@Location", SqlDbType.NVarChar);
             }
             else if (newDialogType == NewDialogType.Proion) {
-
                 this.Text = "Νέο Προϊόν";
                 this.label1.Text = "Όνομα προϊόντος";
                 this.textBox1.Size = new System.Drawing.Size(224, 21);
@@ -49,88 +48,8 @@ namespace Apothiki {
             }
         }
 
-        private void newKouti() {
-            int id = -1;
-            string location = null;
-            try {
-                id = Int32.Parse(this.textBox1.Text);
-                location = this.textBox2.Text;
-                location = location.Trim();
-                newKoutiCmd.Parameters["@Id"].Value = id;
-                newKoutiCmd.Parameters["@Location"].Value = location;
-                try {
-                    con.Open();
-                    int rowsAffected = newKoutiCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1) {
-                        MessageBox.Show("Η εισαγωγή του κουτιού " + id + " με τοποθεσία \"" + location + "\" ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else {
-                        MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (SqlException sqlEx) {
-                    if (sqlEx.Number == 2627) {
-                        MessageBox.Show("Το κουτί " + id + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-            catch (FormatException) {
-                MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally {
-                if (con.State != ConnectionState.Closed) {
-                    con.Close();
-                }
-                this.textBox1.Text = "";
-                this.textBox2.Text = "";
-                this.ActiveControl = textBox1;
-            }
-        }
-
-        private void newProion() {
-
-            String name = this.textBox1.Text.Trim();
-            if (name != "") {
-                newProionCmd.Parameters["@Name"].Value = name;
-                try {
-                    con.Open();
-                    int rowsAffected = newProionCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1) {
-                        MessageBox.Show("Η εισαγωγή του \"" + name + "\" ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else {
-                        MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-
-                }
-                catch (SqlException sqlEx) {
-
-                    if (sqlEx.Number == 2627) {
-                        MessageBox.Show("To Προϊόν υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    else {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                finally {
-                    if (con.State != ConnectionState.Closed) {
-                        con.Close();
-                    }
-                    this.textBox1.Text = "";
-                    this.ActiveControl = textBox1;
-                }
-            }
-            else {
-                MessageBox.Show("Παρακαλώ εισάγετε τιμή στο πεδίο Όνομα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
         private void OKButton_Click(object sender, EventArgs e) {
-
-            if (this.label2.Visible == true) {
+            if (this.newDialogType == NewDialogType.Kouti) {
                 newKouti();
                 ((MainForm)this.Owner).updateDataGridViewByKoutia();
             }
@@ -138,7 +57,69 @@ namespace Apothiki {
                 newProion();
                 ((MainForm)this.Owner).updateDataGridViewByProionta();
             }
+        }
 
+        private void newKouti() {
+            try {
+                int id = Int32.Parse(this.textBox1.Text.Trim());
+                string location = this.textBox2.Text.Trim();
+                newKoutiCmd.Parameters["@Id"].Value = id;
+                newKoutiCmd.Parameters["@Location"].Value = location;
+                try {
+                    con.Open();
+                    int rowsAffected = newKoutiCmd.ExecuteNonQuery();
+                    if (rowsAffected == 1)
+                        MessageBox.Show("Το κουτί " + id + " με τοποθεσία \"" + location + "\" δημιουργήθηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (SqlException sqlEx) {
+                    if (sqlEx.Number == 2627)
+                        MessageBox.Show("Το κουτί " + id + " υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    else
+                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (FormatException) {
+                MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally {
+                if (con.State != ConnectionState.Closed)
+                    con.Close();
+            }
+            this.textBox1.Text = "";
+            this.textBox2.Text = "";
+            this.ActiveControl = textBox1;
+        }
+
+        private void newProion() {
+            String name = this.textBox1.Text.Trim();
+            if (name != "") {
+                newProionCmd.Parameters["@Name"].Value = name;
+                try {
+                    con.Open();
+                    int rowsAffected = newProionCmd.ExecuteNonQuery();
+                    if (rowsAffected == 1)
+                        MessageBox.Show("Το προϊόν \"" + name + "\" δημιουργήθηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    else
+                        MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (SqlException sqlEx) {
+
+                    if (sqlEx.Number == 2627)
+                        MessageBox.Show("To προϊόν \"" + name + "\" υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    else
+                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally {
+                    if (con.State != ConnectionState.Closed)
+                        con.Close();
+                }
+                this.textBox1.Text = "";
+                this.ActiveControl = textBox1;
+            }
+            else
+                MessageBox.Show("Παρακαλώ εισάγετε τιμή στο πεδίο Όνομα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

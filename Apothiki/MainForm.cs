@@ -23,7 +23,7 @@ namespace Apothiki {
         SqlConnection con;
         SqlDataReader dataReader;
 
-        //SQL string queries 
+        //SQL String queries 
         String koutiaCmdString, koutiaByIdCmdString, koutiaByLocationCmdString,
                proiontaCmdString, proiontaByNameCmdString,
                sxeseisCmdString, sxeseisByKoutiIdCmdString, sxeseisByProionNameCmdString, sxeseisByKoutiLocationCmdString,

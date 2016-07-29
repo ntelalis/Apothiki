@@ -191,9 +191,9 @@ namespace Apothiki {
                     }
                     catch (SqlException sqlEx) {
                         if (sqlEx.Number == 2627)
-                            MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         else if (sqlEx.Number == 547)
-                            MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που εισάγατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που πληκτρολογήσατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         else
                             MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
@@ -221,7 +221,7 @@ namespace Apothiki {
                             MessageBox.Show("Η εξαγωγή ήταν επιτυχής", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else if (rowsAffected == 0) {
-                            MessageBox.Show("Η εξαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που εισάγατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            MessageBox.Show("Η εξαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που πληκτρολογήσατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
                         fillComboBoxes();
                         comboBox1_SelectedIndexChanged(null, null);

@@ -189,12 +189,12 @@ namespace Apothiki {
                                 }
                             }
                             else {
-                                MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                         }
                         catch (SqlException sqlEx) {
                             if (sqlEx.Number == 2627) {
-                                MessageBox.Show("Το κουτί " + newid + " υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Το κουτί " + newid + " υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                             else {
                                 MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -230,12 +230,12 @@ namespace Apothiki {
                                 MessageBox.Show("Το προϊόν \"" + oldValue + "\" άλλαξε σε \"" + newValue + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else {
-                                MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                         }
                         catch (SqlException sqlEx) {
                             if (sqlEx.Number == 2627) {
-                                MessageBox.Show("Το προϊόν \"" + newValue + "\" υπάρχει ήδη", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Το προϊόν \"" + newValue + "\" υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
                             else {
                                 MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
