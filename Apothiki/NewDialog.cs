@@ -28,7 +28,6 @@ namespace Apothiki {
                 this.label2.Text = "Τοποθεσία (Προαιρετικό)";
                 this.label2.Visible = true;
                 this.textBox2.Visible = true;
-                this.textBox1.Size = new System.Drawing.Size(64, 21);
                 this.ActiveControl = textBox1;
 
                 newKoutiCmdString = "INSERT INTO KOUTI (Id,Location) VALUES (@Id,@Location)";
@@ -82,6 +81,9 @@ namespace Apothiki {
             }
             catch (FormatException) {
                 MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (OverflowException) {
+                MessageBox.Show("Ο αριθμός που πληκτρολογήσατε είναι πολύ μεγάλος", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
                 if (con.State != ConnectionState.Closed)

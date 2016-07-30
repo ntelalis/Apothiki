@@ -201,6 +201,9 @@ namespace Apothiki {
                 catch (FormatException) {
                     MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                catch (OverflowException) {
+                    MessageBox.Show("Ο αριθμός που πληκτρολογήσατε είναι πολύ μεγάλος", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
                 finally {
                     if (con.State != ConnectionState.Closed)
                         con.Close();
@@ -234,6 +237,9 @@ namespace Apothiki {
                 }
                 catch (FormatException) {
                     MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (OverflowException) {
+                    MessageBox.Show("Ο αριθμός που πληκτρολογήσατε είναι πολύ μεγάλος", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)

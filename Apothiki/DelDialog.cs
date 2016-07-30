@@ -14,10 +14,10 @@ namespace Apothiki {
         SqlConnection con;
         DelDialogType delDialogType;
 
-        String delKoutiCmdString, delProionCmdString;
-        String koutiaCmdString, proiontaCmdString;
-        SqlCommand delKoutiCmd, delProionCmd;
-        SqlCommand koutiaCmd, proiontaCmd;
+        String delKoutiCmdString, delProionCmdString,
+               koutiaCmdString, proiontaCmdString;
+        SqlCommand delKoutiCmd, delProionCmd,
+                   koutiaCmd, proiontaCmd;
 
         ApothikiDataSet.KoutiDataTable koutiTable;
         ApothikiDataSet.ProionDataTable proionTable;
@@ -31,7 +31,6 @@ namespace Apothiki {
             if (delDialogType == DelDialogType.Kouti) {
                 this.Text = "Διαγραφή κουτιού";
                 this.label1.Text = "Αριθμός Κουτιού";
-                this.comboBox1.Size = new System.Drawing.Size(64, 21);
 
                 delKoutiCmdString = "DELETE FROM KOUTI WHERE (Id=@Id)";
                 delKoutiCmd = new SqlCommand(delKoutiCmdString, con);
@@ -59,11 +58,11 @@ namespace Apothiki {
 
         private void OKButton_Click(object sender, EventArgs e) {
             if (delDialogType == DelDialogType.Kouti) {
-                DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
-                if (result.Equals(DialogResult.Yes)) {
-                    try {
-                        int id = Int32.Parse(comboBox1.Text);
-                        delKoutiCmd.Parameters["@Id"].Value = id;
+                try {
+                    int id = Int32.Parse(comboBox1.Text);
+                    delKoutiCmd.Parameters["@Id"].Value = id;
+                    DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (result.Equals(DialogResult.Yes)) {
                         try {
                             con.Open();
                             int rowsAffected = delKoutiCmd.ExecuteNonQuery();
@@ -76,13 +75,16 @@ namespace Apothiki {
                             MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                    catch (FormatException) {
-                        MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                    finally {
-                        if (con.State != ConnectionState.Closed)
-                            con.Close();
-                    }
+                }
+                catch (FormatException) {
+                    MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (OverflowException) {
+                    MessageBox.Show("Ο αριθμός που πληκτρολογήσατε είναι πολύ μεγάλος", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally {
+                    if (con.State != ConnectionState.Closed)
+                        con.Close();
                 }
             }
             else if (delDialogType == DelDialogType.Proion) {
