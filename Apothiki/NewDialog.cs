@@ -24,11 +24,10 @@ namespace Apothiki {
 
             if (newDialogType == NewDialogType.Kouti) {
                 this.Text = "Νέο Κουτί";
-                this.label1.Text = "Αριθμός κουτιού";
-                this.label2.Text = "Τοποθεσία (Προαιρετικό)";
-                this.label1.Visible = true;
-                this.textBox1.Visible = true;
-                this.ActiveControl = textBox1;
+                this.labelProionOrLoc.Text = "Τοποθεσία(Προαιρετικό)";
+                this.labelKouti.Visible = true;
+                this.textBoxKouti.Visible = true;
+                this.ActiveControl = textBoxKouti;
 
                 newKoutiCmdString = "INSERT INTO KOUTI (Id,Location) VALUES (@Id,@Location)";
                 newKoutiCmd = new SqlCommand(newKoutiCmdString, con);
@@ -37,9 +36,9 @@ namespace Apothiki {
             }
             else if (newDialogType == NewDialogType.Proion) {
                 this.Text = "Νέο Προϊόν";
-                this.label2.Text = "Όνομα προϊόντος";
-                this.textBox2.Size = new System.Drawing.Size(224, 21);
-                this.ActiveControl = textBox2;
+                this.labelProionOrLoc.Text = "Όνομα προϊόντος";
+                this.textBoxProionOrLoc.Size = new System.Drawing.Size(224, 21);
+                this.ActiveControl = textBoxProionOrLoc;
 
                 newProionCmdString = "INSERT INTO PROION (Name) VALUES (@Name)";
                 newProionCmd = new SqlCommand(newProionCmdString, con);
@@ -48,23 +47,23 @@ namespace Apothiki {
             toggleOKButton();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e) {
+        private void textBoxKouti_TextChanged(object sender, EventArgs e) {
             toggleOKButton();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e) {
+        private void textBoxProionOrLoc_TextChanged(object sender, EventArgs e) {
             toggleOKButton();
         }
 
         private void toggleOKButton() {
             if (newDialogType == NewDialogType.Kouti) {
-                if (textBox1.Text == "")
+                if (textBoxKouti.Text == "")
                     OKButton.Enabled = false;
                 else
                     OKButton.Enabled = true;
             }
             else {
-                if (textBox2.Text == "")
+                if (textBoxProionOrLoc.Text == "")
                     OKButton.Enabled = false;
                 else
                     OKButton.Enabled = true;
@@ -80,8 +79,8 @@ namespace Apothiki {
 
         private void newKouti() {
             try {
-                int id = Int32.Parse(this.textBox1.Text.Trim());
-                string location = this.textBox2.Text.Trim();
+                int id = Int32.Parse(this.textBoxKouti.Text.Trim());
+                string location = this.textBoxProionOrLoc.Text.Trim();
                 newKoutiCmd.Parameters["@Id"].Value = id;
                 newKoutiCmd.Parameters["@Location"].Value = location;
                 try {
@@ -113,13 +112,13 @@ namespace Apothiki {
                 if (con.State != ConnectionState.Closed)
                     con.Close();
             }
-            this.textBox1.Text = "";
-            this.textBox2.Text = "";
-            this.ActiveControl = textBox1;
+            this.textBoxKouti.Text = "";
+            this.textBoxProionOrLoc.Text = "";
+            this.ActiveControl = textBoxKouti;
         }
 
         private void newProion() {
-            String name = this.textBox2.Text.Trim();
+            String name = this.textBoxProionOrLoc.Text.Trim();
             if (name != "") {
                 newProionCmd.Parameters["@Name"].Value = name;
                 try {
@@ -144,8 +143,8 @@ namespace Apothiki {
                     if (con.State != ConnectionState.Closed)
                         con.Close();
                 }
-                this.textBox2.Text = "";
-                this.ActiveControl = textBox2;
+                this.textBoxProionOrLoc.Text = "";
+                this.ActiveControl = textBoxProionOrLoc;
             }
             else
                 MessageBox.Show("Παρακαλώ εισάγετε τιμή στο πεδίο Όνομα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

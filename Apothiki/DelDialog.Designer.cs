@@ -24,31 +24,31 @@
         /// 
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DelDialog));
-            this.label1 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.labelKoutiOrProion = new System.Windows.Forms.Label();
+            this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBoxKoutiOrProion = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // label1
+            // labelKoutiOrProion
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(9, 40);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 17);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
+            this.labelKoutiOrProion.AutoSize = true;
+            this.labelKoutiOrProion.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelKoutiOrProion.Location = new System.Drawing.Point(9, 40);
+            this.labelKoutiOrProion.Name = "labelKoutiOrProion";
+            this.labelKoutiOrProion.Size = new System.Drawing.Size(38, 17);
+            this.labelKoutiOrProion.TabIndex = 3;
+            this.labelKoutiOrProion.Text = "label";
             // 
-            // button2
+            // CancelButton
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(255, 117);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancelButton.Location = new System.Drawing.Point(255, 117);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelButton.TabIndex = 2;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
             // 
             // OKButton
             // 
@@ -61,28 +61,28 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // comboBox1
+            // comboBoxKoutiOrProion
             // 
-            this.comboBox1.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(12, 60);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(64, 21);
-            this.comboBox1.TabIndex = 0;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            this.comboBox1.TextUpdate += new System.EventHandler(this.comboBox1_TextUpdate);
+            this.comboBoxKoutiOrProion.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboBoxKoutiOrProion.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBoxKoutiOrProion.FormattingEnabled = true;
+            this.comboBoxKoutiOrProion.Location = new System.Drawing.Point(12, 60);
+            this.comboBoxKoutiOrProion.Name = "comboBoxKoutiOrProion";
+            this.comboBoxKoutiOrProion.Size = new System.Drawing.Size(64, 21);
+            this.comboBoxKoutiOrProion.TabIndex = 0;
+            this.comboBoxKoutiOrProion.SelectedIndexChanged += new System.EventHandler(this.comboBoxKoutiOrProion_SelectedIndexChanged);
+            this.comboBoxKoutiOrProion.TextUpdate += new System.EventHandler(this.comboBoxKoutiOrProion_TextUpdate);
             // 
             // DelDialog
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
+            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(351, 163);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.comboBoxKoutiOrProion);
+            this.Controls.Add(this.labelKoutiOrProion);
+            this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -95,9 +95,9 @@
         }
 
         #endregion
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Label labelKoutiOrProion;
+        private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBoxKoutiOrProion;
     }
 }

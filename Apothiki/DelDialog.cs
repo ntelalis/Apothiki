@@ -30,7 +30,7 @@ namespace Apothiki {
 
             if (delDialogType == DelDialogType.Kouti) {
                 this.Text = "Διαγραφή κουτιού";
-                this.label1.Text = "Αριθμός Κουτιού";
+                this.labelKoutiOrProion.Text = "Αριθμός Κουτιού";
 
                 delKoutiCmdString = "DELETE FROM KOUTI WHERE (Id=@Id)";
                 delKoutiCmd = new SqlCommand(delKoutiCmdString, con);
@@ -42,8 +42,8 @@ namespace Apothiki {
             }
             else if (delDialogType == DelDialogType.Proion) {
                 this.Text = "Διαγραφή προϊόντος";
-                this.label1.Text = "Όνομα προϊόντος";
-                this.comboBox1.Size = new System.Drawing.Size(224, 21);
+                this.labelKoutiOrProion.Text = "Όνομα προϊόντος";
+                this.comboBoxKoutiOrProion.Size = new System.Drawing.Size(224, 21);
 
                 delProionCmdString = "DELETE FROM PROION WHERE (Name=@Name)";
                 delProionCmd = new SqlCommand(delProionCmdString, con);
@@ -53,15 +53,15 @@ namespace Apothiki {
                 proiontaCmd = new SqlCommand(proiontaCmdString, con);
                 proionTable = new ApothikiDataSet.ProionDataTable();
             }
-            fillComboBox();
+            fillComboBoxKoutiOrProion();
         }
 
         private void OKButton_Click(object sender, EventArgs e) {
             if (delDialogType == DelDialogType.Kouti) {
                 try {
-                    int id = Int32.Parse(comboBox1.Text);
+                    int id = Int32.Parse(comboBoxKoutiOrProion.Text);
                     delKoutiCmd.Parameters["@Id"].Value = id;
-                    DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBox1.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το κουτί " + comboBoxKoutiOrProion.Text + ";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                     if (result.Equals(DialogResult.Yes)) {
                         try {
                             con.Open();
@@ -88,9 +88,9 @@ namespace Apothiki {
                 }
             }
             else if (delDialogType == DelDialogType.Proion) {
-                DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το προϊόν \"" + comboBox1.Text + "\";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                DialogResult result = MessageBox.Show("Είστε βέβαιοι ότι θέλετε να διαγράψετε το προϊόν \"" + comboBoxKoutiOrProion.Text + "\";", "Επιβεβαίωση", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (result.Equals(DialogResult.Yes)) {
-                    String name = comboBox1.Text;
+                    String name = comboBoxKoutiOrProion.Text;
                     delProionCmd.Parameters["@Name"].Value = name;
                     try {
                         con.Open();
@@ -109,11 +109,11 @@ namespace Apothiki {
                     }
                 }
             }
-            fillComboBox();
+            fillComboBoxKoutiOrProion();
             ((MainForm)this.Owner).updateDataGridViewBySxeseis();
         }
 
-        private void fillComboBox() {
+        private void fillComboBoxKoutiOrProion() {
             if (delDialogType == DelDialogType.Kouti) {
                 koutiTable.Clear();
                 try {
@@ -123,10 +123,10 @@ namespace Apothiki {
                     dataReader.Close();
                     koutiaCmd.Dispose();
 
-                    comboBox1.DataSource = koutiTable;
-                    comboBox1.DisplayMember = "Id";
-                    comboBox1.BindingContext = this.BindingContext;
-                    comboBox1.SelectedIndex = -1;
+                    comboBoxKoutiOrProion.DataSource = koutiTable;
+                    comboBoxKoutiOrProion.DisplayMember = "Id";
+                    comboBoxKoutiOrProion.BindingContext = this.BindingContext;
+                    comboBoxKoutiOrProion.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -145,10 +145,10 @@ namespace Apothiki {
                     dataReader.Close();
                     proiontaCmd.Dispose();
 
-                    comboBox1.DataSource = proionTable;
-                    comboBox1.DisplayMember = "Name";
-                    comboBox1.BindingContext = this.BindingContext;
-                    comboBox1.SelectedIndex = -1;
+                    comboBoxKoutiOrProion.DataSource = proionTable;
+                    comboBoxKoutiOrProion.DisplayMember = "Name";
+                    comboBoxKoutiOrProion.BindingContext = this.BindingContext;
+                    comboBoxKoutiOrProion.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -160,15 +160,15 @@ namespace Apothiki {
             }
         }
 
-        private void comboBox1_TextUpdate(object sender, EventArgs e) {
-            if (comboBox1.Text == "")
+        private void comboBoxKoutiOrProion_TextUpdate(object sender, EventArgs e) {
+            if (comboBoxKoutiOrProion.Text == "")
                 OKButton.Enabled = false;
             else
                 OKButton.Enabled = true;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            comboBox1_TextUpdate(null, null);
+        private void comboBoxKoutiOrProion_SelectedIndexChanged(object sender, EventArgs e) {
+            comboBoxKoutiOrProion_TextUpdate(null, null);
         }
     }
 }

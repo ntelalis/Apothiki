@@ -32,11 +32,11 @@ namespace Apothiki {
 
             if (changeDialogType == ChangeDialogType.Kouti) {
                 this.Text = "Αλλαγή Κουτιού";
-                this.label1.Text = "Αριθμός Κουτιού";
-                this.label3.Visible = true;
-                this.label4.Visible = true;
-                this.textBox1.Visible = true;
-                this.textBox3.Visible = true;
+                this.labelKoutiOrProionOld.Text = "Αριθμός Κουτιού";
+                this.labelLocOld.Visible = true;
+                this.labelLocNew.Visible = true;
+                this.textBoxLocOld.Visible = true;
+                this.textBoxLocNew.Visible = true;
 
                 koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
                 koutiaCmd = new SqlCommand(koutiaCmdString, con);
@@ -56,9 +56,9 @@ namespace Apothiki {
             }
             else if (changeDialogType == ChangeDialogType.Proion) {
                 this.Text = "Αλλαγή Προϊόντος";
-                this.label1.Text = "Παλιά τιμή";
-                this.comboBox1.Size = new System.Drawing.Size(224, 21);
-                this.textBox2.Size = new System.Drawing.Size(224, 20);
+                this.labelKoutiOrProionOld.Text = "Όνομα προϊόντος";
+                this.comboBoxKoutiOrProionOld.Size = new System.Drawing.Size(224, 21);
+                this.textBoxKoutiOrProionNew.Size = new System.Drawing.Size(224, 20);
 
                 proiontaCmdString = "SELECT * FROM PROION ORDER BY Name";
                 proiontaCmd = new SqlCommand(proiontaCmdString, con);
@@ -70,42 +70,42 @@ namespace Apothiki {
 
                 proionTable = new ApothikiDataSet.ProionDataTable();
             }
-            fillCombobox();
+            fillComboboxKoutiOrProionOld();
         }
 
         private void ChangeDialog_Load(object sender, EventArgs e) {
-            comboBox1_SelectedIndexChanged(null, null);
+            comboBoxKoutiOrProionOld_SelectedIndexChanged(null, null);
         }
 
-        private void comboBox1_TextUpdate(object sender, EventArgs e) {
+        private void comboBoxKoutiOrProionOld_TextUpdate(object sender, EventArgs e) {
             toggleOKButton();
-            if (comboBox1.Text == "") {
-                textBox2.Text = "";
+            if (comboBoxKoutiOrProionOld.Text == "") {
+                textBoxKoutiOrProionNew.Text = "";
                 if(changeDialogType == ChangeDialogType.Kouti) {
-                    textBox1.Text = "";
-                    textBox3.Text = "";
+                    textBoxLocOld.Text = "";
+                    textBoxLocNew.Text = "";
                 }
             }
                 
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
-            updateOldValue();
+        private void comboBoxKoutiOrProionOld_SelectedIndexChanged(object sender, EventArgs e) {
+            updateTextBoxes();
             toggleOKButton();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e) {
+        private void comboBoxKoutiOrProionNew_TextChanged(object sender, EventArgs e) {
             toggleOKButton();
         }
 
         private void toggleOKButton() {
-            if (comboBox1.Text == "" || textBox2.Text == "")
+            if (comboBoxKoutiOrProionOld.Text == "" || textBoxKoutiOrProionNew.Text == "")
                 OKButton.Enabled = false;
             else
                 OKButton.Enabled = true;
         }
 
-        private void fillCombobox() {
+        private void fillComboboxKoutiOrProionOld() {
             if (changeDialogType == ChangeDialogType.Kouti) {
                 koutiTable1.Clear();
                 try {
@@ -115,10 +115,10 @@ namespace Apothiki {
                     dataReader.Close();
                     koutiaCmd.Dispose();
 
-                    comboBox1.DataSource = koutiTable1;
-                    comboBox1.DisplayMember = "Id";
-                    comboBox1.BindingContext = this.BindingContext;
-                    comboBox1.SelectedIndex = -1;
+                    comboBoxKoutiOrProionOld.DataSource = koutiTable1;
+                    comboBoxKoutiOrProionOld.DisplayMember = "Id";
+                    comboBoxKoutiOrProionOld.BindingContext = this.BindingContext;
+                    comboBoxKoutiOrProionOld.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -137,10 +137,10 @@ namespace Apothiki {
                     dataReader.Close();
                     proiontaCmd.Dispose();
 
-                    comboBox1.DataSource = proionTable;
-                    comboBox1.DisplayMember = "Name";
-                    comboBox1.BindingContext = this.BindingContext;
-                    comboBox1.SelectedIndex = -1;
+                    comboBoxKoutiOrProionOld.DataSource = proionTable;
+                    comboBoxKoutiOrProionOld.DisplayMember = "Name";
+                    comboBoxKoutiOrProionOld.BindingContext = this.BindingContext;
+                    comboBoxKoutiOrProionOld.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -152,12 +152,12 @@ namespace Apothiki {
             }
         }
 
-        private void updateOldValue() {
-            if (comboBox1.Text != "") {
+        private void updateTextBoxes() {
+            if (comboBoxKoutiOrProionOld.Text != "") {
                 if (changeDialogType == ChangeDialogType.Kouti) {
-                    textBox2.Text = comboBox1.Text;
+                    textBoxKoutiOrProionNew.Text = comboBoxKoutiOrProionOld.Text;
 
-                    int id = Int32.Parse(comboBox1.Text);
+                    int id = Int32.Parse(comboBoxKoutiOrProionOld.Text);
                     koutiById.Parameters["@Id"].Value = id;
                     koutiTable2.Clear();
                     try {
@@ -168,11 +168,11 @@ namespace Apothiki {
                         koutiById.Dispose();
 
                         if (koutiTable2.Rows.Count == 1)
-                            textBox1.Text = koutiTable2.Rows[0]["Location"].ToString();
+                            textBoxLocOld.Text = koutiTable2.Rows[0]["Location"].ToString();
                         else
-                            textBox1.Text = "";
+                            textBoxLocOld.Text = "";
 
-                        textBox3.Text = textBox1.Text;
+                        textBoxLocNew.Text = textBoxLocOld.Text;
                     }
                     catch (SqlException sqlEx) {
                         MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -183,23 +183,23 @@ namespace Apothiki {
                     }
                 }
                 else if (changeDialogType == ChangeDialogType.Proion)
-                    textBox2.Text = comboBox1.Text;
+                    textBoxKoutiOrProionNew.Text = comboBoxKoutiOrProionOld.Text;
             }
             else
-                textBox2.Text = "";
+                textBoxKoutiOrProionNew.Text = "";
         }
 
         private void OKButton_Click(object sender, EventArgs e) {
             if (changeDialogType == ChangeDialogType.Kouti) {
                 try {
-                    int newid = Int32.Parse(textBox2.Text.Trim());
-                    int oldid = Int32.Parse(comboBox1.Text.Trim());
-                    String newLocation = textBox3.Text.Trim();
+                    int newid = Int32.Parse(textBoxKoutiOrProionNew.Text.Trim());
+                    int oldid = Int32.Parse(comboBoxKoutiOrProionOld.Text.Trim());
+                    String newLocation = textBoxLocNew.Text.Trim();
                     changeKouti.Parameters["@NewId"].Value = newid;
                     changeKouti.Parameters["@OldId"].Value = oldid;
                     changeKouti.Parameters["@NewLocation"].Value = newLocation;
 
-                    if (newid != oldid || newLocation != textBox1.Text) {
+                    if (newid != oldid || newLocation != textBoxLocOld.Text) {
                         try {
                             con.Open();
                             int rowsAffected = changeKouti.ExecuteNonQuery();
@@ -207,7 +207,7 @@ namespace Apothiki {
                             if (!(rowsAffected == 0)) {
                                 if (oldid == newid)
                                     MessageBox.Show("Η τοποθεσία του κουτιού " + oldid + " άλλαξε σε \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                else if (newLocation == textBox1.Text)
+                                else if (newLocation == textBoxLocOld.Text)
                                     MessageBox.Show("Το κουτί " + oldid + " άλλαξε σε κουτί " + newid, "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 else
                                     MessageBox.Show("Το κουτί " + oldid + " άλλαξε σε κουτί " + newid + " με καινούρια τοποθεσία \"" + newLocation + "\"", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -226,8 +226,8 @@ namespace Apothiki {
                                 con.Close();
                         }
 
-                        fillCombobox();
-                        updateOldValue();
+                        fillComboboxKoutiOrProionOld();
+                        updateTextBoxes();
                         toggleOKButton();
                     }
                     else
@@ -241,8 +241,8 @@ namespace Apothiki {
                 }
             }
             else if (changeDialogType == ChangeDialogType.Proion) {
-                String oldValue = comboBox1.Text.Trim();
-                String newValue = textBox2.Text.Trim();
+                String oldValue = comboBoxKoutiOrProionOld.Text.Trim();
+                String newValue = textBoxKoutiOrProionNew.Text.Trim();
 
                 if (oldValue != newValue) {
                     changeProionCmd.Parameters["@NewName"].Value = newValue;
@@ -267,8 +267,8 @@ namespace Apothiki {
                             con.Close();
                     }
 
-                    fillCombobox();
-                    updateOldValue();
+                    fillComboboxKoutiOrProionOld();
+                    updateTextBoxes();
                     toggleOKButton();
                 }
                 else

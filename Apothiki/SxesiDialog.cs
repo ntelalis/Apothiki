@@ -24,7 +24,7 @@ namespace Apothiki {
         ApothikiDataSet.KoutiDataTable koutiTable;
         ApothikiDataSet.ProionDataTable proionTable;
         ApothikiDataSet.SxesiDataTable sxesiTableProion;
-        DataTable sxesiTableId;
+        DataTable sxesiTableKoutiId;
         SqlDataReader dataReader;
 
         public SxesiDialog(SxesiDialogType sxesiDialogType, SqlConnection con) {
@@ -64,7 +64,7 @@ namespace Apothiki {
                 sxeseisByKoutiCmd = new SqlCommand(sxeseisByKoutiCmdString, con);
                 sxeseisByKoutiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
 
-                sxesiTableId = new DataTable();
+                sxesiTableKoutiId = new DataTable();
                 sxesiTableProion = new ApothikiDataSet.SxesiDataTable();
             }
             fillComboBoxes();
@@ -72,27 +72,27 @@ namespace Apothiki {
         }
 
         private void toggleOKButton() {
-            if (comboBox1.Text != "" && comboBox2.Text != "")
+            if (comboBoxKouti.Text != "" && comboBoxProion.Text != "")
                 OKButton.Enabled = true;
             else
                 OKButton.Enabled = false;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e) {
+        private void comboBoxKouti_SelectedIndexChanged(object sender, EventArgs e) {
             if (sxesiDialogType == SxesiDialogType.Export)
-                updateComboBox2();
+                updateComboBoxProion();
             toggleOKButton();
         }
 
-        private void comboBox1_TextUpdate(object sender, EventArgs e) {
+        private void comboBoxKouti_TextUpdate(object sender, EventArgs e) {
             toggleOKButton();
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e) {
+        private void comboBoxProion_SelectedIndexChanged(object sender, EventArgs e) {
             toggleOKButton();
         }
 
-        private void comboBox2_TextUpdate(object sender, EventArgs e) {
+        private void comboBoxProion_TextUpdate(object sender, EventArgs e) {
             toggleOKButton();
         }
 
@@ -112,15 +112,15 @@ namespace Apothiki {
                     dataReader.Close();
                     proiontaCmd.Dispose();
 
-                    comboBox1.DataSource = koutiTable;
-                    comboBox1.DisplayMember = "Id";
-                    comboBox1.BindingContext = this.BindingContext;
-                    comboBox1.SelectedIndex = -1;
+                    comboBoxKouti.DataSource = koutiTable;
+                    comboBoxKouti.DisplayMember = "Id";
+                    comboBoxKouti.BindingContext = this.BindingContext;
+                    comboBoxKouti.SelectedIndex = -1;
 
-                    comboBox2.DataSource = proionTable;
-                    comboBox2.DisplayMember = "Name";
-                    comboBox2.BindingContext = this.BindingContext;
-                    comboBox2.SelectedIndex = -1;
+                    comboBoxProion.DataSource = proionTable;
+                    comboBoxProion.DisplayMember = "Name";
+                    comboBoxProion.BindingContext = this.BindingContext;
+                    comboBoxProion.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -131,19 +131,19 @@ namespace Apothiki {
                 }
             }
             else if (sxesiDialogType == SxesiDialogType.Export) {
-                comboBox1.Items.Clear();
-                sxesiTableId.Clear();
+                comboBoxKouti.Items.Clear();
+                sxesiTableKoutiId.Clear();
                 sxesiTableProion.Clear();
                 try {
                     con.Open();
                     dataReader = sxeseisCmd.ExecuteReader();
-                    sxesiTableId.Load(dataReader);
+                    sxesiTableKoutiId.Load(dataReader);
                     dataReader.Close();
                     sxeseisCmd.Dispose();
 
-                    if (sxesiTableId.Rows.Count > 0)
-                        foreach (DataRow dataRow in sxesiTableId.Rows)
-                            comboBox1.Items.Add(dataRow["KoutiId"].ToString());
+                    if (sxesiTableKoutiId.Rows.Count > 0)
+                        foreach (DataRow dataRow in sxesiTableKoutiId.Rows)
+                            comboBoxKouti.Items.Add(dataRow["KoutiId"].ToString());
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -159,8 +159,8 @@ namespace Apothiki {
         private void OKButton_Click(object sender, EventArgs e) {
             if (sxesiDialogType == SxesiDialogType.Import) {
                 try {
-                    int koutiId = Int32.Parse(comboBox1.Text);
-                    String proionName = comboBox2.Text;
+                    int koutiId = Int32.Parse(comboBoxKouti.Text);
+                    String proionName = comboBoxProion.Text;
                     newSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
                     newSxesiCmd.Parameters["@ProionName"].Value = proionName;
 
@@ -196,8 +196,8 @@ namespace Apothiki {
             }
             else if (sxesiDialogType == SxesiDialogType.Export) {
                 try {
-                    int koutiId = Int32.Parse(comboBox1.Text);
-                    string proionName = comboBox2.Text;
+                    int koutiId = Int32.Parse(comboBoxKouti.Text);
+                    string proionName = comboBoxProion.Text;
                     delSxesiCmd.Parameters["@KoutiId"].Value = koutiId;
                     delSxesiCmd.Parameters["@ProionName"].Value = proionName;
 
@@ -224,16 +224,16 @@ namespace Apothiki {
                         con.Close();
                 }
                 fillComboBoxes();
-                comboBox1_SelectedIndexChanged(null, null);
+                comboBoxKouti_SelectedIndexChanged(null, null);
                 toggleOKButton();
             }
             ((MainForm)this.Owner).updateDataGridViewBySxeseis();
         }
 
-        private void updateComboBox2() {
-            if (comboBox1.Text != "") {
+        private void updateComboBoxProion() {
+            if (comboBoxKouti.Text != "") {
                 sxesiTableProion.Clear();
-                sxeseisByKoutiCmd.Parameters["@KoutiId"].Value = Int32.Parse(comboBox1.Text);
+                sxeseisByKoutiCmd.Parameters["@KoutiId"].Value = Int32.Parse(comboBoxKouti.Text);
 
                 try {
                     con.Open();
@@ -242,9 +242,9 @@ namespace Apothiki {
                     dataReader.Close();
                     sxeseisByKoutiCmd.Dispose();
 
-                    comboBox2.DataSource = sxesiTableProion;
-                    comboBox2.DisplayMember = "ProionName";
-                    comboBox2.BindingContext = this.BindingContext;
+                    comboBoxProion.DataSource = sxesiTableProion;
+                    comboBoxProion.DisplayMember = "ProionName";
+                    comboBoxProion.BindingContext = this.BindingContext;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

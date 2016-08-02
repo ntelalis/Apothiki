@@ -30,11 +30,11 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewDialog));
             this.OKButton = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.labelKouti = new System.Windows.Forms.Label();
+            this.textBoxKouti = new System.Windows.Forms.TextBox();
+            this.textBoxProionOrLoc = new System.Windows.Forms.TextBox();
+            this.labelProionOrLoc = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // OKButton
@@ -47,66 +47,66 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // button2
+            // CancelButton
             // 
-            this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(240, 129);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancelButton.Location = new System.Drawing.Point(240, 129);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelButton.TabIndex = 3;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // labelKouti
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(12, 9);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(46, 17);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "label1";
-            this.label1.Visible = false;
+            this.labelKouti.AutoSize = true;
+            this.labelKouti.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelKouti.Location = new System.Drawing.Point(12, 9);
+            this.labelKouti.Name = "labelKouti";
+            this.labelKouti.Size = new System.Drawing.Size(113, 17);
+            this.labelKouti.TabIndex = 4;
+            this.labelKouti.Text = "Αριθμός κουτιού";
+            this.labelKouti.Visible = false;
             // 
-            // textBox1
+            // textBoxKouti
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 29);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(64, 20);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.Visible = false;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.textBoxKouti.Location = new System.Drawing.Point(15, 29);
+            this.textBoxKouti.Name = "textBoxKouti";
+            this.textBoxKouti.Size = new System.Drawing.Size(64, 20);
+            this.textBoxKouti.TabIndex = 0;
+            this.textBoxKouti.Visible = false;
+            this.textBoxKouti.TextChanged += new System.EventHandler(this.textBoxKouti_TextChanged);
             // 
-            // textBox2
+            // textBoxProionOrLoc
             // 
-            this.textBox2.Location = new System.Drawing.Point(15, 72);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(179, 20);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
+            this.textBoxProionOrLoc.Location = new System.Drawing.Point(15, 72);
+            this.textBoxProionOrLoc.Name = "textBoxProionOrLoc";
+            this.textBoxProionOrLoc.Size = new System.Drawing.Size(179, 20);
+            this.textBoxProionOrLoc.TabIndex = 1;
+            this.textBoxProionOrLoc.TextChanged += new System.EventHandler(this.textBoxProionOrLoc_TextChanged);
             // 
-            // label2
+            // labelProionOrLoc
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 52);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 17);
-            this.label2.TabIndex = 5;
-            this.label2.Text = "label2";
+            this.labelProionOrLoc.AutoSize = true;
+            this.labelProionOrLoc.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelProionOrLoc.Location = new System.Drawing.Point(12, 52);
+            this.labelProionOrLoc.Name = "labelProionOrLoc";
+            this.labelProionOrLoc.Size = new System.Drawing.Size(38, 17);
+            this.labelProionOrLoc.TabIndex = 5;
+            this.labelProionOrLoc.Text = "label";
             // 
             // NewDialog
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.button2;
+            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(327, 164);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.labelProionOrLoc);
+            this.Controls.Add(this.textBoxProionOrLoc);
+            this.Controls.Add(this.textBoxKouti);
+            this.Controls.Add(this.labelKouti);
+            this.Controls.Add(this.CancelButton);
             this.Controls.Add(this.OKButton);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -122,10 +122,10 @@
         #endregion
 
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Label labelKouti;
+        private System.Windows.Forms.TextBox textBoxKouti;
+        private System.Windows.Forms.TextBox textBoxProionOrLoc;
+        private System.Windows.Forms.Label labelProionOrLoc;
     }
 }
