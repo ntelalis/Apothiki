@@ -163,14 +163,18 @@
             // importProionToKouti
             // 
             this.importProionToKouti.Name = "importProionToKouti";
-            this.importProionToKouti.Size = new System.Drawing.Size(180, 22);
+            this.importProionToKouti.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.importProionToKouti.ShowShortcutKeys = false;
+            this.importProionToKouti.Size = new System.Drawing.Size(173, 22);
             this.importProionToKouti.Text = "Εισαγωγή σε Κουτί";
             this.importProionToKouti.Click += new System.EventHandler(this.importProionToKouti_Click);
             // 
             // exportProionApoKouti
             // 
             this.exportProionApoKouti.Name = "exportProionApoKouti";
-            this.exportProionApoKouti.Size = new System.Drawing.Size(180, 22);
+            this.exportProionApoKouti.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.exportProionApoKouti.ShowShortcutKeys = false;
+            this.exportProionApoKouti.Size = new System.Drawing.Size(173, 22);
             this.exportProionApoKouti.Text = "Εξαγωγή από Κουτί";
             this.exportProionApoKouti.Click += new System.EventHandler(this.exportProionApoKouti_Click);
             // 
@@ -186,6 +190,8 @@
             // newKouti
             // 
             this.newKouti.Name = "newKouti";
+            this.newKouti.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.K)));
+            this.newKouti.ShowShortcutKeys = false;
             this.newKouti.Size = new System.Drawing.Size(152, 22);
             this.newKouti.Text = "Κουτί";
             this.newKouti.Click += new System.EventHandler(this.newKouti_Click);
@@ -193,6 +199,8 @@
             // newProion
             // 
             this.newProion.Name = "newProion";
+            this.newProion.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.newProion.ShowShortcutKeys = false;
             this.newProion.Size = new System.Drawing.Size(152, 22);
             this.newProion.Text = "Προϊόν";
             this.newProion.Click += new System.EventHandler(this.newProion_Click);
@@ -209,6 +217,8 @@
             // changeKouti
             // 
             this.changeKouti.Name = "changeKouti";
+            this.changeKouti.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.K)));
+            this.changeKouti.ShowShortcutKeys = false;
             this.changeKouti.Size = new System.Drawing.Size(152, 22);
             this.changeKouti.Text = "Κουτί";
             this.changeKouti.Click += new System.EventHandler(this.changeKouti_Click);
@@ -216,6 +226,8 @@
             // changeProion
             // 
             this.changeProion.Name = "changeProion";
+            this.changeProion.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.P)));
+            this.changeProion.ShowShortcutKeys = false;
             this.changeProion.Size = new System.Drawing.Size(152, 22);
             this.changeProion.Text = "Προϊόν";
             this.changeProion.Click += new System.EventHandler(this.changeProion_Click);
@@ -232,14 +244,20 @@
             // delKouti
             // 
             this.delKouti.Name = "delKouti";
-            this.delKouti.Size = new System.Drawing.Size(113, 22);
+            this.delKouti.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.K)));
+            this.delKouti.ShowShortcutKeys = false;
+            this.delKouti.Size = new System.Drawing.Size(152, 22);
             this.delKouti.Text = "Κουτί";
             this.delKouti.Click += new System.EventHandler(this.delKouti_Click);
             // 
             // delProion
             // 
             this.delProion.Name = "delProion";
-            this.delProion.Size = new System.Drawing.Size(113, 22);
+            this.delProion.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Alt) 
+            | System.Windows.Forms.Keys.P)));
+            this.delProion.ShowShortcutKeys = false;
+            this.delProion.Size = new System.Drawing.Size(152, 22);
             this.delProion.Text = "Προϊόν";
             this.delProion.Click += new System.EventHandler(this.delProion_Click);
             // 
