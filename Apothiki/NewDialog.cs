@@ -72,14 +72,10 @@ namespace Apothiki {
         }
 
         private void OKButton_Click(object sender, EventArgs e) {
-            if (this.newDialogType == NewDialogType.Kouti) {
+            if (this.newDialogType == NewDialogType.Kouti)
                 newKouti();
-                ((MainForm)this.Owner).updateDataGridViewByKoutia();
-            }
-            else {
+            else
                 newProion();
-                ((MainForm)this.Owner).updateDataGridViewByProionta();
-            }
         }
 
         private void newKouti() {
@@ -91,8 +87,12 @@ namespace Apothiki {
                 try {
                     con.Open();
                     int rowsAffected = newKoutiCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1)
+                    con.Close();
+                    if (rowsAffected == 1) {
                         MessageBox.Show("Το κουτί " + id + " με τοποθεσία \"" + location + "\" δημιουργήθηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ((MainForm)this.Owner).updateDataGridViewByKoutia();
+
+                    }
                     else
                         MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -125,8 +125,11 @@ namespace Apothiki {
                 try {
                     con.Open();
                     int rowsAffected = newProionCmd.ExecuteNonQuery();
-                    if (rowsAffected == 1)
+                    con.Close();
+                    if (rowsAffected == 1) {
                         MessageBox.Show("Το προϊόν \"" + name + "\" δημιουργήθηκε με επιτυχία", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ((MainForm)this.Owner).updateDataGridViewByProionta();
+                    }
                     else
                         MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
