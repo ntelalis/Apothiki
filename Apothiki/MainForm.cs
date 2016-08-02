@@ -74,6 +74,10 @@ namespace Apothiki {
             updateProductStrings();
         }
 
+        private void dataGridView_Resize(object sender, EventArgs e) {
+            dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        }
+
         private void changeKouti_Click(object sender, EventArgs e) {
             changeDialog = new ChangeDialog(ChangeDialogType.Kouti, con);
             changeDialog.ShowDialog(this);
@@ -208,9 +212,11 @@ namespace Apothiki {
                 }
                 dataReader.Close();
                 dataGridView.DataSource = koutiTable;
-                dataGridView.Columns[0].Width = 50;
-                dataGridView.Columns[1].Width = 200;
+                dataGridView.Columns[0].FillWeight = 20;
+                dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[0].HeaderText = "Αριθμός";
+                dataGridView.Columns[1].FillWeight = 80;
+                dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[1].HeaderText = "Τοποθεσία";
             }
             catch (SqlException sqlEx) {
@@ -246,7 +252,8 @@ namespace Apothiki {
                 }
                 dataReader.Close();
                 dataGridView.DataSource = proionTable;
-                dataGridView.Columns[0].Width = 250;
+                dataGridView.Columns[0].FillWeight = 20;
+                dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[0].HeaderText = "Όνομα";
             }
             catch (SqlException sqlEx) {
@@ -302,14 +309,24 @@ namespace Apothiki {
                     SxeseisCmd.Dispose();
                 }
                 dataReader.Close();
+
                 sxesiTable.DefaultView.Sort = "KoutiId asc";
                 dataGridView.DataSource = sxesiTable;
-                dataGridView.Columns[0].Width = 50;
-                dataGridView.Columns[1].Width = 230;
-                dataGridView.Columns[2].Width = 130;
+
+                dataGridView.Columns[0].FillWeight = 20;
+                dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[0].HeaderText = "Κουτί";
+
+                dataGridView.Columns[1].FillWeight = 80;
+                dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[1].HeaderText = "Προϊόν";
+
+                dataGridView.Columns[2].FillWeight = 50;
+                dataGridView.Columns[2].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[2].HeaderText = "Τοποθεσία";
+
+
+
             }
             catch (SqlException sqlEx) {
                 MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -322,7 +339,7 @@ namespace Apothiki {
 
         private void initStrings() {
             //Sql Connection String
-            conString = Apothiki.Properties.Settings.Default.ApothikiConnectionString;
+            conString = global::Apothiki.Properties.Settings.Default.ApothikiConnectionString;
 
             //Koutia Cmd Strings
             koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";

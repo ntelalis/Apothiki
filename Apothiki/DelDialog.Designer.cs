@@ -88,7 +88,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DelDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "SxesiDialog";
+            this.Text = "DelDialog";
             this.ResumeLayout(false);
             this.PerformLayout();
 

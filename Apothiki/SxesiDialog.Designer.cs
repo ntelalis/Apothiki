@@ -60,7 +60,7 @@
             // button2
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button2.Location = new System.Drawing.Point(255, 117);
+            this.button2.Location = new System.Drawing.Point(264, 128);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
@@ -70,7 +70,7 @@
             // OKButton
             // 
             this.OKButton.Enabled = false;
-            this.OKButton.Location = new System.Drawing.Point(174, 117);
+            this.OKButton.Location = new System.Drawing.Point(183, 128);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 2;
@@ -88,6 +88,7 @@
             this.comboBox1.Size = new System.Drawing.Size(64, 21);
             this.comboBox1.TabIndex = 0;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboBox1.TextUpdate += new System.EventHandler(this.comboBox1_TextUpdate);
             // 
             // comboBox2
             // 
@@ -98,6 +99,8 @@
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(224, 21);
             this.comboBox2.TabIndex = 1;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
+            this.comboBox2.TextUpdate += new System.EventHandler(this.comboBox2_TextUpdate);
             // 
             // SxesiDialog
             // 
@@ -117,7 +120,6 @@
             this.Name = "SxesiDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SxesiDialog";
-            this.Load += new System.EventHandler(this.SxesiDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

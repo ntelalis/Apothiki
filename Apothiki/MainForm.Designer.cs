@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.radioSxeseis = new System.Windows.Forms.RadioButton();
@@ -81,7 +82,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView);
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer1.Size = new System.Drawing.Size(471, 421);
+            this.splitContainer1.Size = new System.Drawing.Size(471, 681);
             this.splitContainer1.SplitterDistance = 161;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -123,7 +124,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 71);
+            this.label1.Location = new System.Drawing.Point(12, 69);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(63, 13);
             this.label1.TabIndex = 1;
@@ -131,7 +132,7 @@
             // 
             // searchSxeseisTextBox
             // 
-            this.searchSxeseisTextBox.Location = new System.Drawing.Point(81, 68);
+            this.searchSxeseisTextBox.Location = new System.Drawing.Point(81, 66);
             this.searchSxeseisTextBox.Name = "searchSxeseisTextBox";
             this.searchSxeseisTextBox.Size = new System.Drawing.Size(201, 20);
             this.searchSxeseisTextBox.TabIndex = 0;
@@ -185,14 +186,14 @@
             // newKouti
             // 
             this.newKouti.Name = "newKouti";
-            this.newKouti.Size = new System.Drawing.Size(113, 22);
+            this.newKouti.Size = new System.Drawing.Size(152, 22);
             this.newKouti.Text = "Κουτί";
             this.newKouti.Click += new System.EventHandler(this.newKouti_Click);
             // 
             // newProion
             // 
             this.newProion.Name = "newProion";
-            this.newProion.Size = new System.Drawing.Size(113, 22);
+            this.newProion.Size = new System.Drawing.Size(152, 22);
             this.newProion.Text = "Προϊόν";
             this.newProion.Click += new System.EventHandler(this.newProion_Click);
             // 
@@ -208,14 +209,14 @@
             // changeKouti
             // 
             this.changeKouti.Name = "changeKouti";
-            this.changeKouti.Size = new System.Drawing.Size(113, 22);
+            this.changeKouti.Size = new System.Drawing.Size(152, 22);
             this.changeKouti.Text = "Κουτί";
             this.changeKouti.Click += new System.EventHandler(this.changeKouti_Click);
             // 
             // changeProion
             // 
             this.changeProion.Name = "changeProion";
-            this.changeProion.Size = new System.Drawing.Size(113, 22);
+            this.changeProion.Size = new System.Drawing.Size(152, 22);
             this.changeProion.Text = "Προϊόν";
             this.changeProion.Click += new System.EventHandler(this.changeProion_Click);
             // 
@@ -246,22 +247,26 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.dataGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(471, 256);
+            this.dataGridView.Size = new System.Drawing.Size(471, 516);
             this.dataGridView.TabIndex = 0;
+            this.dataGridView.TabStop = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 421);
+            this.ClientSize = new System.Drawing.Size(471, 681);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(430, 250);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Αποθήκη";

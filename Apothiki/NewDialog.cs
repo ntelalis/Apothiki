@@ -26,8 +26,8 @@ namespace Apothiki {
                 this.Text = "Νέο Κουτί";
                 this.label1.Text = "Αριθμός κουτιού";
                 this.label2.Text = "Τοποθεσία (Προαιρετικό)";
-                this.label2.Visible = true;
-                this.textBox2.Visible = true;
+                this.label1.Visible = true;
+                this.textBox1.Visible = true;
                 this.ActiveControl = textBox1;
 
                 newKoutiCmdString = "INSERT INTO KOUTI (Id,Location) VALUES (@Id,@Location)";
@@ -37,13 +37,37 @@ namespace Apothiki {
             }
             else if (newDialogType == NewDialogType.Proion) {
                 this.Text = "Νέο Προϊόν";
-                this.label1.Text = "Όνομα προϊόντος";
-                this.textBox1.Size = new System.Drawing.Size(224, 21);
-                this.ActiveControl = textBox1;
+                this.label2.Text = "Όνομα προϊόντος";
+                this.textBox2.Size = new System.Drawing.Size(224, 21);
+                this.ActiveControl = textBox2;
 
                 newProionCmdString = "INSERT INTO PROION (Name) VALUES (@Name)";
                 newProionCmd = new SqlCommand(newProionCmdString, con);
                 newProionCmd.Parameters.Add("@Name", SqlDbType.NVarChar);
+            }
+            toggleOKButton();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e) {
+            toggleOKButton();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e) {
+            toggleOKButton();
+        }
+
+        private void toggleOKButton() {
+            if (newDialogType == NewDialogType.Kouti) {
+                if (textBox1.Text == "")
+                    OKButton.Enabled = false;
+                else
+                    OKButton.Enabled = true;
+            }
+            else {
+                if (textBox2.Text == "")
+                    OKButton.Enabled = false;
+                else
+                    OKButton.Enabled = true;
             }
         }
 
@@ -95,7 +119,7 @@ namespace Apothiki {
         }
 
         private void newProion() {
-            String name = this.textBox1.Text.Trim();
+            String name = this.textBox2.Text.Trim();
             if (name != "") {
                 newProionCmd.Parameters["@Name"].Value = name;
                 try {
@@ -117,8 +141,8 @@ namespace Apothiki {
                     if (con.State != ConnectionState.Closed)
                         con.Close();
                 }
-                this.textBox1.Text = "";
-                this.ActiveControl = textBox1;
+                this.textBox2.Text = "";
+                this.ActiveControl = textBox2;
             }
             else
                 MessageBox.Show("Παρακαλώ εισάγετε τιμή στο πεδίο Όνομα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

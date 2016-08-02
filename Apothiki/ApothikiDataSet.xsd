@@ -162,7 +162,7 @@ SELECT KoutiId, KoutiLocation, ProionName FROM Sxesi WHERE (KoutiId = @KoutiId) 
   <xs:element name="ApothikiDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="ApothikiDataSet" msprop:Generator_UserDSName="ApothikiDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Kouti" msprop:Generator_TableClassName="KoutiDataTable" msprop:Generator_TableVarName="tableKouti" msprop:Generator_RowChangedName="KoutiRowChanged" msprop:Generator_TablePropName="Kouti" msprop:Generator_RowDeletingName="KoutiRowDeleting" msprop:Generator_RowChangingName="KoutiRowChanging" msprop:Generator_RowEvHandlerName="KoutiRowChangeEventHandler" msprop:Generator_RowDeletedName="KoutiRowDeleted" msprop:Generator_RowClassName="KoutiRow" msprop:Generator_UserTableName="Kouti" msprop:Generator_RowEvArgName="KoutiRowChangeEvent">
+        <xs:element name="Kouti" msprop:Generator_TableClassName="KoutiDataTable" msprop:Generator_TableVarName="tableKouti" msprop:Generator_TablePropName="Kouti" msprop:Generator_RowDeletingName="KoutiRowDeleting" msprop:Generator_RowChangingName="KoutiRowChanging" msprop:Generator_RowEvHandlerName="KoutiRowChangeEventHandler" msprop:Generator_RowDeletedName="KoutiRowDeleted" msprop:Generator_UserTableName="Kouti" msprop:Generator_RowChangedName="KoutiRowChanged" msprop:Generator_RowEvArgName="KoutiRowChangeEvent" msprop:Generator_RowClassName="KoutiRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Id" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnId" msprop:Generator_ColumnPropNameInRow="Id" msprop:Generator_ColumnPropNameInTable="IdColumn" msprop:Generator_UserColumnName="Id" type="xs:int" />
@@ -176,7 +176,7 @@ SELECT KoutiId, KoutiLocation, ProionName FROM Sxesi WHERE (KoutiId = @KoutiId) 
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Proion" msprop:Generator_TableClassName="ProionDataTable" msprop:Generator_TableVarName="tableProion" msprop:Generator_RowChangedName="ProionRowChanged" msprop:Generator_TablePropName="Proion" msprop:Generator_RowDeletingName="ProionRowDeleting" msprop:Generator_RowChangingName="ProionRowChanging" msprop:Generator_RowEvHandlerName="ProionRowChangeEventHandler" msprop:Generator_RowDeletedName="ProionRowDeleted" msprop:Generator_RowClassName="ProionRow" msprop:Generator_UserTableName="Proion" msprop:Generator_RowEvArgName="ProionRowChangeEvent">
+        <xs:element name="Proion" msprop:Generator_TableClassName="ProionDataTable" msprop:Generator_TableVarName="tableProion" msprop:Generator_TablePropName="Proion" msprop:Generator_RowDeletingName="ProionRowDeleting" msprop:Generator_RowChangingName="ProionRowChanging" msprop:Generator_RowEvHandlerName="ProionRowChangeEventHandler" msprop:Generator_RowDeletedName="ProionRowDeleted" msprop:Generator_UserTableName="Proion" msprop:Generator_RowChangedName="ProionRowChanged" msprop:Generator_RowEvArgName="ProionRowChangeEvent" msprop:Generator_RowClassName="ProionRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name">
@@ -189,7 +189,7 @@ SELECT KoutiId, KoutiLocation, ProionName FROM Sxesi WHERE (KoutiId = @KoutiId) 
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Sxesi" msprop:Generator_TableClassName="SxesiDataTable" msprop:Generator_TableVarName="tableSxesi" msprop:Generator_RowChangedName="SxesiRowChanged" msprop:Generator_TablePropName="Sxesi" msprop:Generator_RowDeletingName="SxesiRowDeleting" msprop:Generator_RowChangingName="SxesiRowChanging" msprop:Generator_RowEvHandlerName="SxesiRowChangeEventHandler" msprop:Generator_RowDeletedName="SxesiRowDeleted" msprop:Generator_RowClassName="SxesiRow" msprop:Generator_UserTableName="Sxesi" msprop:Generator_RowEvArgName="SxesiRowChangeEvent">
+        <xs:element name="Sxesi" msprop:Generator_TableClassName="SxesiDataTable" msprop:Generator_TableVarName="tableSxesi" msprop:Generator_TablePropName="Sxesi" msprop:Generator_RowDeletingName="SxesiRowDeleting" msprop:Generator_RowChangingName="SxesiRowChanging" msprop:Generator_RowEvHandlerName="SxesiRowChangeEventHandler" msprop:Generator_RowDeletedName="SxesiRowDeleted" msprop:Generator_UserTableName="Sxesi" msprop:Generator_RowChangedName="SxesiRowChanged" msprop:Generator_RowEvArgName="SxesiRowChangeEvent" msprop:Generator_RowClassName="SxesiRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="KoutiId" msprop:Generator_ColumnVarNameInTable="columnKoutiId" msprop:Generator_ColumnPropNameInRow="KoutiId" msprop:Generator_ColumnPropNameInTable="KoutiIdColumn" msprop:Generator_UserColumnName="KoutiId" type="xs:int" />
@@ -228,8 +228,8 @@ SELECT KoutiId, KoutiLocation, ProionName FROM Sxesi WHERE (KoutiId = @KoutiId) 
   </xs:element>
   <xs:annotation>
     <xs:appinfo>
-      <msdata:Relationship name="fk_KId" msdata:parent="Kouti" msdata:child="Sxesi" msdata:parentkey="Id" msdata:childkey="KoutiId" msprop:Generator_UserChildTable="Sxesi" msprop:Generator_ChildPropName="GetSxesiRows" msprop:Generator_UserRelationName="fk_KId" msprop:Generator_RelationVarName="relationfk_KId" msprop:Generator_UserParentTable="Kouti" msprop:Generator_ParentPropName="KoutiRow" />
-      <msdata:Relationship name="fk_PName" msdata:parent="Proion" msdata:child="Sxesi" msdata:parentkey="Name" msdata:childkey="ProionName" msprop:Generator_UserChildTable="Sxesi" msprop:Generator_ChildPropName="GetSxesiRows" msprop:Generator_UserRelationName="fk_PName" msprop:Generator_ParentPropName="ProionRow" msprop:Generator_RelationVarName="relationfk_PName" msprop:Generator_UserParentTable="Proion" />
+      <msdata:Relationship name="fk_KId" msdata:parent="Kouti" msdata:child="Sxesi" msdata:parentkey="Id" msdata:childkey="KoutiId" msprop:Generator_UserChildTable="Sxesi" msprop:Generator_ChildPropName="GetSxesiRows" msprop:Generator_UserRelationName="fk_KId" msprop:Generator_ParentPropName="KoutiRow" msprop:Generator_RelationVarName="relationfk_KId" msprop:Generator_UserParentTable="Kouti" />
+      <msdata:Relationship name="fk_PName" msdata:parent="Proion" msdata:child="Sxesi" msdata:parentkey="Name" msdata:childkey="ProionName" msprop:Generator_UserChildTable="Sxesi" msprop:Generator_ChildPropName="GetSxesiRows" msprop:Generator_UserRelationName="fk_PName" msprop:Generator_RelationVarName="relationfk_PName" msprop:Generator_UserParentTable="Proion" msprop:Generator_ParentPropName="ProionRow" />
     </xs:appinfo>
   </xs:annotation>
 </xs:schema>

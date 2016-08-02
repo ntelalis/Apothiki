@@ -126,6 +126,7 @@ namespace Apothiki {
                     comboBox1.DataSource = koutiTable;
                     comboBox1.DisplayMember = "Id";
                     comboBox1.BindingContext = this.BindingContext;
+                    comboBox1.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -147,6 +148,7 @@ namespace Apothiki {
                     comboBox1.DataSource = proionTable;
                     comboBox1.DisplayMember = "Name";
                     comboBox1.BindingContext = this.BindingContext;
+                    comboBox1.SelectedIndex = -1;
                 }
                 catch (SqlException sqlEx) {
                     MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);

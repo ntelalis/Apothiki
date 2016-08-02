@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Apothiki
 {
-    static class Program
+    static class Apothiki
     {
         /// <summary>
         /// The main entry point for the application.
