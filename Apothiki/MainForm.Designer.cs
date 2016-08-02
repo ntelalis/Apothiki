@@ -82,7 +82,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView);
             this.splitContainer1.Panel2.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.splitContainer1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.splitContainer1.Size = new System.Drawing.Size(471, 681);
+            this.splitContainer1.Size = new System.Drawing.Size(584, 681);
             this.splitContainer1.SplitterDistance = 161;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -90,7 +90,7 @@
             // 
             this.radioSxeseis.AutoSize = true;
             this.radioSxeseis.Checked = true;
-            this.radioSxeseis.Location = new System.Drawing.Point(328, 46);
+            this.radioSxeseis.Location = new System.Drawing.Point(391, 44);
             this.radioSxeseis.Name = "radioSxeseis";
             this.radioSxeseis.Size = new System.Drawing.Size(66, 17);
             this.radioSxeseis.TabIndex = 5;
@@ -102,7 +102,7 @@
             // radioProionta
             // 
             this.radioProionta.AutoSize = true;
-            this.radioProionta.Location = new System.Drawing.Point(328, 92);
+            this.radioProionta.Location = new System.Drawing.Point(391, 90);
             this.radioProionta.Name = "radioProionta";
             this.radioProionta.Size = new System.Drawing.Size(73, 17);
             this.radioProionta.TabIndex = 4;
@@ -113,7 +113,7 @@
             // radioKoutia
             // 
             this.radioKoutia.AutoSize = true;
-            this.radioKoutia.Location = new System.Drawing.Point(328, 69);
+            this.radioKoutia.Location = new System.Drawing.Point(391, 67);
             this.radioKoutia.Name = "radioKoutia";
             this.radioKoutia.Size = new System.Drawing.Size(59, 17);
             this.radioKoutia.TabIndex = 3;
@@ -134,7 +134,7 @@
             // 
             this.searchSxeseisTextBox.Location = new System.Drawing.Point(81, 66);
             this.searchSxeseisTextBox.Name = "searchSxeseisTextBox";
-            this.searchSxeseisTextBox.Size = new System.Drawing.Size(201, 20);
+            this.searchSxeseisTextBox.Size = new System.Drawing.Size(257, 20);
             this.searchSxeseisTextBox.TabIndex = 0;
             this.searchSxeseisTextBox.TextChanged += new System.EventHandler(this.searchSxeseisTextBox_TextChanged);
             // 
@@ -147,7 +147,7 @@
             this.διαγραφήToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(471, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(584, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -272,7 +272,7 @@
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(471, 516);
+            this.dataGridView.Size = new System.Drawing.Size(584, 516);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.TabStop = false;
             // 
@@ -280,11 +280,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(471, 681);
+            this.ClientSize = new System.Drawing.Size(584, 681);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(430, 250);
+            this.MinimumSize = new System.Drawing.Size(490, 250);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Αποθήκη";
