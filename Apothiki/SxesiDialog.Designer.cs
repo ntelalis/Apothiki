@@ -107,6 +107,7 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.cancelButton;
             this.ClientSize = new System.Drawing.Size(351, 163);
             this.Controls.Add(this.comboBoxProion);
             this.Controls.Add(this.comboBoxKouti);
