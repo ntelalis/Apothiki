@@ -159,6 +159,7 @@
       <DependentUpon>Apothiki.mdf</DependentUpon>
     </Content>
     <Content Include="Apothiki.ico" />
+    <Content Include="CreateDB.sql" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

@@ -30,7 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewDialog));
             this.OKButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.labelKouti = new System.Windows.Forms.Label();
             this.textBoxKouti = new System.Windows.Forms.TextBox();
             this.textBoxProionOrLoc = new System.Windows.Forms.TextBox();
@@ -47,15 +47,15 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // CancelButton
+            // cancelButton
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(240, 129);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 3;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(240, 129);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 3;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
             // 
             // labelKouti
             // 
@@ -100,13 +100,12 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(327, 164);
             this.Controls.Add(this.labelProionOrLoc);
             this.Controls.Add(this.textBoxProionOrLoc);
             this.Controls.Add(this.textBoxKouti);
             this.Controls.Add(this.labelKouti);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.OKButton);
             this.Cursor = System.Windows.Forms.Cursors.Default;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -122,7 +121,7 @@
         #endregion
 
         private System.Windows.Forms.Button OKButton;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Label labelKouti;
         private System.Windows.Forms.TextBox textBoxKouti;
         private System.Windows.Forms.TextBox textBoxProionOrLoc;

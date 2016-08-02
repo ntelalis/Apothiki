@@ -27,7 +27,7 @@
             this.labelLocNew = new System.Windows.Forms.Label();
             this.textBoxKoutiOrProionNew = new System.Windows.Forms.TextBox();
             this.labelKoutiOrProionOld = new System.Windows.Forms.Label();
-            this.CancelButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.comboBoxKoutiOrProionOld = new System.Windows.Forms.ComboBox();
             this.textBoxLocOld = new System.Windows.Forms.TextBox();
@@ -66,15 +66,15 @@
             this.labelKoutiOrProionOld.TabIndex = 6;
             this.labelKoutiOrProionOld.Text = "label";
             // 
-            // CancelButton
+            // cancelButton
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(264, 128);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 5;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(264, 128);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(75, 23);
+            this.cancelButton.TabIndex = 5;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = true;
             // 
             // OKButton
             // 
@@ -142,7 +142,6 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(351, 163);
             this.Controls.Add(this.labelKoutiOrProionNew);
             this.Controls.Add(this.textBoxLocNew);
@@ -152,7 +151,7 @@
             this.Controls.Add(this.labelLocNew);
             this.Controls.Add(this.textBoxKoutiOrProionNew);
             this.Controls.Add(this.labelKoutiOrProionOld);
-            this.Controls.Add(this.CancelButton);
+            this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.OKButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -170,7 +169,7 @@
         private System.Windows.Forms.Label labelLocNew;
         private System.Windows.Forms.TextBox textBoxKoutiOrProionNew;
         private System.Windows.Forms.Label labelKoutiOrProionOld;
-        private System.Windows.Forms.Button CancelButton;
+        private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.ComboBox comboBoxKoutiOrProionOld;
         private System.Windows.Forms.TextBox textBoxLocOld;

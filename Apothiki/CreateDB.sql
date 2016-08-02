@@ -31,3 +31,15 @@ AS
 
 	UPDATE Sxesi SET KoutiLocation=@Location WHERE KoutiId=@Id;
 
+GO
+CREATE TRIGGER insLocTrigger ON SXESI
+INSTEAD OF INSERT
+AS
+	DECLARE @Id Int;
+	DECLARE @ProionName NVARCHAR(50);
+	DECLARE @KoutiLocation NVARCHAR(50);
+	SELECT @Id=i.KoutiId from inserted i;
+	SELECT @ProionName=i.ProionName from inserted i;
+	SELECT @KoutiLocation=Kouti.Location FROM Kouti WHERE Id=@Id;
+	
+	INSERT INTO Sxesi(KoutiId,ProionName,KoutiLocation) VALUES(@Id,@ProionName,@KoutiLocation);
