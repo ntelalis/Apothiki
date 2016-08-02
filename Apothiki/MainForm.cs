@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace Apothiki {
@@ -44,6 +45,8 @@ namespace Apothiki {
             InitializeComponent();
             initStrings();
             initCmds();
+            //DoubleBuffered DataGridView
+            typeof(DataGridView).InvokeMember("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty, null, dataGridView, new object[] { true });
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
