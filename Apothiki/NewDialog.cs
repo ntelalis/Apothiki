@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Apothiki {
@@ -11,13 +12,13 @@ namespace Apothiki {
 
     public partial class NewDialog : Form {
 
-        SqlConnection con;
+        SQLiteConnection con;
         NewDialogType newDialogType;
 
         String newKoutiCmdString, newProionCmdString;
-        SqlCommand newKoutiCmd, newProionCmd;
+        SQLiteCommand newKoutiCmd, newProionCmd;
 
-        public NewDialog(NewDialogType newDialogType, SqlConnection con) {
+        public NewDialog(NewDialogType newDialogType, SQLiteConnection con) {
             InitializeComponent();
             this.newDialogType = newDialogType;
             this.con = con;
@@ -30,9 +31,9 @@ namespace Apothiki {
                 this.ActiveControl = textBoxKouti;
 
                 newKoutiCmdString = "INSERT INTO KOUTI (Id,Location) VALUES (@Id,@Location)";
-                newKoutiCmd = new SqlCommand(newKoutiCmdString, con);
-                newKoutiCmd.Parameters.Add("@Id", SqlDbType.Int);
-                newKoutiCmd.Parameters.Add("@Location", SqlDbType.NVarChar);
+                newKoutiCmd = new SQLiteCommand(newKoutiCmdString, con);
+                newKoutiCmd.Parameters.AddWithValue("@Id", "DEFAULT");
+                newKoutiCmd.Parameters.AddWithValue("@Location", "DEFAULT");
             }
             else if (newDialogType == NewDialogType.Proion) {
                 this.Text = "Νέο Προϊόν";
@@ -41,8 +42,8 @@ namespace Apothiki {
                 this.ActiveControl = textBoxProionOrLoc;
 
                 newProionCmdString = "INSERT INTO PROION (Name) VALUES (@Name)";
-                newProionCmd = new SqlCommand(newProionCmdString, con);
-                newProionCmd.Parameters.Add("@Name", SqlDbType.NVarChar);
+                newProionCmd = new SQLiteCommand(newProionCmdString, con);
+                newProionCmd.Parameters.AddWithValue("@Name", "DEFAULT");
             }
             toggleOKButton();
         }
@@ -79,7 +80,7 @@ namespace Apothiki {
 
         private void newKouti() {
             try {
-                int id = Int32.Parse(this.textBoxKouti.Text.Trim());
+                int id = Convert.ToInt32(this.textBoxKouti.Text.Trim());
                 string location = this.textBoxProionOrLoc.Text.Trim();
                 newKoutiCmd.Parameters["@Id"].Value = id;
                 newKoutiCmd.Parameters["@Location"].Value = location;
@@ -95,14 +96,14 @@ namespace Apothiki {
                     else
                         MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch (SqlException sqlEx) {
-                    if (sqlEx.Number == 2627)
+                catch (SQLiteException sqlEx) {
+                    if (sqlEx.ErrorCode == 19)
                         MessageBox.Show("Το κουτί " + id + " υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     else
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            catch (FormatException) {
+            catch (FormatException aa) {
                 MessageBox.Show("Το πεδίο \"Αριθμός κουτιού\" δέχεται μόνο ακέραιους αριθμούς", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (OverflowException) {
@@ -132,12 +133,12 @@ namespace Apothiki {
                     else
                         MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Παρακαλώ επικοινωνήστε με το διαχειριστή.", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                catch (SqlException sqlEx) {
+                catch (SQLiteException sqlEx) {
 
-                    if (sqlEx.Number == 2627)
+                    if (sqlEx.ErrorCode == 19)
                         MessageBox.Show("To προϊόν \"" + name + "\" υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     else
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)

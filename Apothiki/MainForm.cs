@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -20,9 +21,10 @@ namespace Apothiki {
         List<String> locationStrings;
 
         //DB related variables
-        String conString;
-        SqlConnection con;
-        SqlDataReader dataReader;
+        //String conString;
+        String liteconString;
+        SQLiteConnection litecon;
+        SQLiteDataReader dataReader;
 
         //SQL String queries 
         String koutiaCmdString, koutiaByIdCmdString, koutiaByLocationCmdString,
@@ -31,7 +33,7 @@ namespace Apothiki {
                locationStringsCmdString;
 
         //SQL Command queries
-        SqlCommand KoutiaCmd, KoutiaByIdCmd, KoutiaByLocationCmd,
+        SQLiteCommand KoutiaCmd, KoutiaByIdCmd, KoutiaByLocationCmd,
                    ProiontaCmd, ProiontaByNameCmd,
                    SxeseisCmd, SxeseisByKoutiIdCmd, SxeseisByProionNameCmd, SxeseisByKoutiLocationCmd,
                    locationStringsCmd;
@@ -56,23 +58,23 @@ namespace Apothiki {
         }
 
         private void importProionToKouti_Click(object sender, EventArgs e) {
-            sxesidialog = new SxesiDialog(SxesiDialogType.Import, con);
+            sxesidialog = new SxesiDialog(SxesiDialogType.Import, litecon);
             sxesidialog.ShowDialog(this);
         }
 
         private void exportProionApoKouti_Click(object sender, EventArgs e) {
-            sxesidialog = new SxesiDialog(SxesiDialogType.Export, con);
+            sxesidialog = new SxesiDialog(SxesiDialogType.Export, litecon);
             sxesidialog.ShowDialog(this);
         }
 
         private void newKouti_Click(object sender, EventArgs e) {
-            newDialog = new NewDialog(NewDialogType.Kouti, con);
+            newDialog = new NewDialog(NewDialogType.Kouti, litecon);
             newDialog.ShowDialog(this);
             updateLocationStrings();
         }
 
         private void newProion_Click(object sender, EventArgs e) {
-            newDialog = new NewDialog(NewDialogType.Proion, con);
+            newDialog = new NewDialog(NewDialogType.Proion, litecon);
             newDialog.ShowDialog(this);
             updateProductStrings();
         }
@@ -82,25 +84,25 @@ namespace Apothiki {
         }
 
         private void changeKouti_Click(object sender, EventArgs e) {
-            changeDialog = new ChangeDialog(ChangeDialogType.Kouti, con);
+            changeDialog = new ChangeDialog(ChangeDialogType.Kouti, litecon);
             changeDialog.ShowDialog(this);
             updateLocationStrings();
         }
 
         private void changeProion_Click(object sender, EventArgs e) {
-            changeDialog = new ChangeDialog(ChangeDialogType.Proion, con);
+            changeDialog = new ChangeDialog(ChangeDialogType.Proion, litecon);
             changeDialog.ShowDialog(this);
             updateProductStrings();
         }
 
         private void delKouti_Click(object sender, EventArgs e) {
-            delDialog = new DelDialog(DelDialogType.Kouti, con);
+            delDialog = new DelDialog(DelDialogType.Kouti, litecon);
             delDialog.ShowDialog(this);
             updateLocationStrings();
         }
 
         private void delProion_Click(object sender, EventArgs e) {
-            delDialog = new DelDialog(DelDialogType.Proion, con);
+            delDialog = new DelDialog(DelDialogType.Proion, litecon);
             delDialog.ShowDialog(this);
             updateProductStrings();
         }
@@ -144,41 +146,41 @@ namespace Apothiki {
         private void updateLocationStrings() {
             locationStrings.Clear();
             try {
-                con.Open();
+                litecon.Open();
                 dataReader = locationStringsCmd.ExecuteReader();
                 if (dataReader.HasRows)
                     while (dataReader.Read())
                         locationStrings.Add(dataReader.GetString(1));
 
                 dataReader.Close();
-                locationStringsCmd.Dispose();
+                //locationStringsCmd.Dispose();
             }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (SQLiteException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                if (litecon.State != ConnectionState.Closed)
+                    litecon.Close();
             }
         }
 
         private void updateProductStrings() {
             productStrings.Clear();
             try {
-                con.Open();
+                litecon.Open();
                 dataReader = ProiontaCmd.ExecuteReader();
                 if (dataReader.HasRows)
                     while (dataReader.Read())
                         productStrings.Add(dataReader.GetString(0));
                 dataReader.Close();
-                ProiontaCmd.Dispose();
+                //ProiontaCmd.Dispose();
             }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (SQLiteException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                if (litecon.State != ConnectionState.Closed)
+                    litecon.Close();
             }
         }
 
@@ -186,7 +188,7 @@ namespace Apothiki {
             text = text.Trim();
             koutiTable.Clear();
             try {
-                con.Open();
+                litecon.Open();
                 //if there is text search by text or else return everything
                 if (text != "") {
                     //if text is number search by id or else search by location
@@ -195,7 +197,7 @@ namespace Apothiki {
                         KoutiaByIdCmd.Parameters["@Id"].Value = num;
                         dataReader = KoutiaByIdCmd.ExecuteReader();
                         koutiTable.Load(dataReader);
-                        KoutiaByIdCmd.Dispose();
+                        //KoutiaByIdCmd.Dispose();
                     }
                     else {
                         foreach (String s in locationStrings) {
@@ -205,13 +207,13 @@ namespace Apothiki {
                                 koutiTable.Load(dataReader);
                             }
                         }
-                        KoutiaByLocationCmd.Dispose();
+                        //KoutiaByLocationCmd.Dispose();
                     }
                 }
                 else {
                     dataReader = KoutiaCmd.ExecuteReader();
                     koutiTable.Load(dataReader);
-                    KoutiaCmd.Dispose();
+                    //KoutiaCmd.Dispose();
                 }
                 dataReader.Close();
                 dataGridView.DataSource = koutiTable;
@@ -222,12 +224,12 @@ namespace Apothiki {
                 dataGridView.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[1].HeaderText = "Τοποθεσία";
             }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (SQLiteException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                if (litecon.State != ConnectionState.Closed)
+                    litecon.Close();
             }
         }
 
@@ -235,7 +237,7 @@ namespace Apothiki {
             text = text.Trim();
             proionTable.Clear();
             try {
-                con.Open();
+                litecon.Open();
                 //if there is text search by text or else return everything
                 if (text != "") {
                     String name = text.Trim();
@@ -246,12 +248,12 @@ namespace Apothiki {
                             proionTable.Load(dataReader);
                         }
                     }
-                    ProiontaByNameCmd.Dispose();
+                    //ProiontaByNameCmd.Dispose();
                 }
                 else {
                     dataReader = ProiontaCmd.ExecuteReader();
                     proionTable.Load(dataReader);
-                    ProiontaCmd.Dispose();
+                    //ProiontaCmd.Dispose();
                 }
                 dataReader.Close();
                 dataGridView.DataSource = proionTable;
@@ -259,12 +261,12 @@ namespace Apothiki {
                 dataGridView.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 dataGridView.Columns[0].HeaderText = "Όνομα";
             }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (SQLiteException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                if (litecon.State != ConnectionState.Closed)
+                    litecon.Close();
             }
         }
 
@@ -272,7 +274,7 @@ namespace Apothiki {
             text = text.Trim();
             sxesiTable.Clear();
             try {
-                con.Open();
+                litecon.Open();
                 //if there is text search by text or else return everything
                 if (text != "") {
                     //if text is number search by id or else search by something else
@@ -281,7 +283,7 @@ namespace Apothiki {
                         SxeseisByKoutiIdCmd.Parameters["@KoutiId"].Value = num;
                         dataReader = SxeseisByKoutiIdCmd.ExecuteReader();
                         sxesiTable.Load(dataReader);
-                        SxeseisByKoutiIdCmd.Dispose();
+                        //SxeseisByKoutiIdCmd.Dispose();
                     }
                     else {
                         //first search by product name
@@ -292,7 +294,7 @@ namespace Apothiki {
                                 sxesiTable.Load(dataReader);
                             }
                         }
-                        SxeseisByProionNameCmd.Dispose();
+                        //SxeseisByProionNameCmd.Dispose();
                         //if no match is found try searching by location
                         if (sxesiTable.Rows.Count == 0) {
                             foreach (String s in locationStrings) {
@@ -302,14 +304,14 @@ namespace Apothiki {
                                     sxesiTable.Load(dataReader);
                                 }
                             }
-                            SxeseisByKoutiLocationCmd.Dispose();
+                            //SxeseisByKoutiLocationCmd.Dispose();
                         }
                     }
                 }
                 else {
                     dataReader = SxeseisCmd.ExecuteReader();
                     sxesiTable.Load(dataReader);
-                    SxeseisCmd.Dispose();
+                    //SxeseisCmd.Dispose();
                 }
                 dataReader.Close();
 
@@ -331,18 +333,19 @@ namespace Apothiki {
 
 
             }
-            catch (SqlException sqlEx) {
-                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            catch (SQLiteException sqlEx) {
+                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally {
-                if (con.State != ConnectionState.Closed)
-                    con.Close();
+                if (litecon.State != ConnectionState.Closed)
+                    litecon.Close();
             }
         }
 
         private void initStrings() {
             //Sql Connection String
-            conString = global::Apothiki.Properties.Settings.Default.ApothikiConnectionString;
+            //conString = global::Apothiki.Properties.Settings.Default.ApothikiConnectionString;
+            liteconString = global::Apothiki.Properties.Settings.Default.LiteApothikiConnectionString;
 
             //Koutia Cmd Strings
             koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
@@ -365,37 +368,37 @@ namespace Apothiki {
 
         private void initCmds() {
             //Init SqlConnection
-            con = new SqlConnection(conString);
-
+            //con = new SqlConnection(conString);
+            litecon = new SQLiteConnection(liteconString);
             //Koutia Cmds
-            KoutiaCmd = new SqlCommand(koutiaCmdString, con);
+            KoutiaCmd = new SQLiteCommand(koutiaCmdString, litecon);
 
-            KoutiaByIdCmd = new SqlCommand(koutiaByIdCmdString, con);
-            KoutiaByIdCmd.Parameters.Add("@Id", SqlDbType.Int);
+            KoutiaByIdCmd = new SQLiteCommand(koutiaByIdCmdString, litecon);
+            KoutiaByIdCmd.Parameters.AddWithValue("@Id", "DEFAULT");
 
-            KoutiaByLocationCmd = new SqlCommand(koutiaByLocationCmdString, con);
-            KoutiaByLocationCmd.Parameters.Add("@Location", SqlDbType.NVarChar);
+            KoutiaByLocationCmd = new SQLiteCommand(koutiaByLocationCmdString, litecon);
+            KoutiaByLocationCmd.Parameters.AddWithValue("@Location", "DEFAULT");
 
             //Proionta Cmds
-            ProiontaCmd = new SqlCommand(proiontaCmdString, con);
+            ProiontaCmd = new SQLiteCommand(proiontaCmdString, litecon);
 
-            ProiontaByNameCmd = new SqlCommand(proiontaByNameCmdString, con);
-            ProiontaByNameCmd.Parameters.Add("@Name", SqlDbType.NVarChar);
+            ProiontaByNameCmd = new SQLiteCommand(proiontaByNameCmdString, litecon);
+            ProiontaByNameCmd.Parameters.AddWithValue("@Name", "DEFAULT");
 
             //Sxeseis Cmds
-            SxeseisCmd = new SqlCommand(sxeseisCmdString, con);
+            SxeseisCmd = new SQLiteCommand(sxeseisCmdString, litecon);
 
-            SxeseisByKoutiIdCmd = new SqlCommand(sxeseisByKoutiIdCmdString, con);
-            SxeseisByKoutiIdCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
+            SxeseisByKoutiIdCmd = new SQLiteCommand(sxeseisByKoutiIdCmdString, litecon);
+            SxeseisByKoutiIdCmd.Parameters.AddWithValue("@KoutiId", "DEFAULT");
 
-            SxeseisByProionNameCmd = new SqlCommand(sxeseisByProionNameCmdString, con);
-            SxeseisByProionNameCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
+            SxeseisByProionNameCmd = new SQLiteCommand(sxeseisByProionNameCmdString, litecon);
+            SxeseisByProionNameCmd.Parameters.AddWithValue("@ProionName", "DEFAULT");
 
-            SxeseisByKoutiLocationCmd = new SqlCommand(sxeseisByKoutiLocationCmdString, con);
-            SxeseisByKoutiLocationCmd.Parameters.Add("@KoutiLocation", SqlDbType.NVarChar);
+            SxeseisByKoutiLocationCmd = new SQLiteCommand(sxeseisByKoutiLocationCmdString, litecon);
+            SxeseisByKoutiLocationCmd.Parameters.AddWithValue("@KoutiLocation", "DEFAULT");
 
             //Helper Cmd for locationStrings list
-            locationStringsCmd = new SqlCommand(locationStringsCmdString, con);
+            locationStringsCmd = new SQLiteCommand(locationStringsCmdString, litecon);
 
             //Init tables
             koutiTable = new ApothikiDataSet.KoutiDataTable();

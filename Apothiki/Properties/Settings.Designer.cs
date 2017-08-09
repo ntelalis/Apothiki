@@ -33,5 +33,15 @@ namespace Apothiki.Properties {
                 return ((string)(this["ApothikiConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\Apothiki.db;foreign keys=true;")]
+        public string LiteApothikiConnectionString {
+            get {
+                return ((string)(this["LiteApothikiConnectionString"]));
+            }
+        }
     }
 }

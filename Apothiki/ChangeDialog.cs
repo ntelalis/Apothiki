@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Apothiki {
@@ -11,21 +12,21 @@ namespace Apothiki {
 
     public partial class ChangeDialog : Form {
 
-        SqlConnection con;
+        SQLiteConnection con;
         ChangeDialogType changeDialogType;
 
         String changeKoutiString, changeProionCmdString,
                koutiaCmdString, proiontaCmdString,
                koutiByIdString;
-        SqlCommand changeKouti, changeProionCmd,
+        SQLiteCommand changeKouti, changeProionCmd,
                    koutiaCmd, proiontaCmd,
                    koutiById;
 
         ApothikiDataSet.KoutiDataTable koutiTable1, koutiTable2;
         ApothikiDataSet.ProionDataTable proionTable;
-        SqlDataReader dataReader;
+        SQLiteDataReader dataReader;
 
-        public ChangeDialog(ChangeDialogType changeDialogType, SqlConnection con) {
+        public ChangeDialog(ChangeDialogType changeDialogType, SQLiteConnection con) {
             InitializeComponent();
             this.changeDialogType = changeDialogType;
             this.con = con;
@@ -39,17 +40,17 @@ namespace Apothiki {
                 this.textBoxLocNew.Visible = true;
 
                 koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
-                koutiaCmd = new SqlCommand(koutiaCmdString, con);
+                koutiaCmd = new SQLiteCommand(koutiaCmdString, con);
 
                 koutiByIdString = "SELECT * FROM KOUTI WHERE (Id=@Id)";
-                koutiById = new SqlCommand(koutiByIdString, con);
-                koutiById.Parameters.Add("@Id", SqlDbType.Int);
+                koutiById = new SQLiteCommand(koutiByIdString, con);
+                koutiById.Parameters.AddWithValue("@Id", "DEFAULT");
 
                 changeKoutiString = "UPDATE KOUTI SET Id=@NewId, Location=@NewLocation WHERE (Id=@OldId)";
-                changeKouti = new SqlCommand(changeKoutiString, con);
-                changeKouti.Parameters.Add("@NewLocation", SqlDbType.NVarChar);
-                changeKouti.Parameters.Add("@OldId", SqlDbType.Int);
-                changeKouti.Parameters.Add("@NewId", SqlDbType.Int);
+                changeKouti = new SQLiteCommand(changeKoutiString, con);
+                changeKouti.Parameters.AddWithValue("@NewLocation", "DEFAULT");
+                changeKouti.Parameters.AddWithValue("@OldId", "DEFAULT");
+                changeKouti.Parameters.AddWithValue("@NewId", "DEFAULT");
 
                 koutiTable1 = new ApothikiDataSet.KoutiDataTable();
                 koutiTable2 = new ApothikiDataSet.KoutiDataTable();
@@ -61,12 +62,12 @@ namespace Apothiki {
                 this.textBoxKoutiOrProionNew.Size = new System.Drawing.Size(224, 20);
 
                 proiontaCmdString = "SELECT * FROM PROION ORDER BY Name";
-                proiontaCmd = new SqlCommand(proiontaCmdString, con);
+                proiontaCmd = new SQLiteCommand(proiontaCmdString, con);
 
                 changeProionCmdString = "UPDATE PROION SET Name=@NewName WHERE (Name=@OldName)";
-                changeProionCmd = new SqlCommand(changeProionCmdString, con);
-                changeProionCmd.Parameters.Add("@NewName", SqlDbType.NVarChar);
-                changeProionCmd.Parameters.Add("@OldName", SqlDbType.NVarChar);
+                changeProionCmd = new SQLiteCommand(changeProionCmdString, con);
+                changeProionCmd.Parameters.AddWithValue("@NewName", "DEFAULT");
+                changeProionCmd.Parameters.AddWithValue("@OldName", "DEFAULT");
 
                 proionTable = new ApothikiDataSet.ProionDataTable();
             }
@@ -113,15 +114,15 @@ namespace Apothiki {
                     dataReader = koutiaCmd.ExecuteReader();
                     koutiTable1.Load(dataReader);
                     dataReader.Close();
-                    koutiaCmd.Dispose();
+                    //koutiaCmd.Dispose();
 
                     comboBoxKoutiOrProionOld.DataSource = koutiTable1;
                     comboBoxKoutiOrProionOld.DisplayMember = "Id";
                     comboBoxKoutiOrProionOld.BindingContext = this.BindingContext;
                     comboBoxKoutiOrProionOld.SelectedIndex = -1;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -135,15 +136,15 @@ namespace Apothiki {
                     dataReader = proiontaCmd.ExecuteReader();
                     proionTable.Load(dataReader);
                     dataReader.Close();
-                    proiontaCmd.Dispose();
+                    //proiontaCmd.Dispose();
 
                     comboBoxKoutiOrProionOld.DataSource = proionTable;
                     comboBoxKoutiOrProionOld.DisplayMember = "Name";
                     comboBoxKoutiOrProionOld.BindingContext = this.BindingContext;
                     comboBoxKoutiOrProionOld.SelectedIndex = -1;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -165,7 +166,7 @@ namespace Apothiki {
                         dataReader = koutiById.ExecuteReader();
                         koutiTable2.Load(dataReader);
                         dataReader.Close();
-                        koutiById.Dispose();
+                        //koutiById.Dispose();
 
                         if (koutiTable2.Rows.Count == 1)
                             textBoxLocOld.Text = koutiTable2.Rows[0]["Location"].ToString();
@@ -174,8 +175,8 @@ namespace Apothiki {
 
                         textBoxLocNew.Text = textBoxLocOld.Text;
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (SQLiteException sqlEx) {
+                        MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally {
                         if (con.State != ConnectionState.Closed)
@@ -215,11 +216,11 @@ namespace Apothiki {
                             else
                                 MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
-                        catch (SqlException sqlEx) {
-                            if (sqlEx.Number == 2627)
+                        catch (SQLiteException sqlEx) {
+                            if (sqlEx.ErrorCode == 19)
                                 MessageBox.Show("Το κουτί " + newid + " υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             else
-                                MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                         finally {
                             if (con.State != ConnectionState.Closed)
@@ -256,11 +257,11 @@ namespace Apothiki {
                         else
                             MessageBox.Show("Η αλλαγή δεν ήταν επιτυχής. Βεβαιωθείτε ότι τα δεδομενα είναι σωστά.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
-                    catch (SqlException sqlEx) {
-                        if (sqlEx.Number == 2627)
+                    catch (SQLiteException sqlEx) {
+                        if (sqlEx.ErrorCode == 19)
                             MessageBox.Show("Το προϊόν \"" + newValue + "\" υπάρχει ήδη", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         else
-                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally {
                         if (con.State != ConnectionState.Closed)

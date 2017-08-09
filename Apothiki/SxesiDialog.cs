@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Apothiki {
@@ -11,13 +12,13 @@ namespace Apothiki {
 
     public partial class SxesiDialog : Form {
 
-        SqlConnection con;
+        SQLiteConnection con;
         SxesiDialogType sxesiDialogType;
 
         String newSxesiCmdString, delSxesiCmdString,
                koutiaCmdString, proiontaCmdString, sxeseisCmdString,
                sxeseisByKoutiCmdString;
-        SqlCommand newSxesiCmd, delSxesiCmd,
+        SQLiteCommand newSxesiCmd, delSxesiCmd,
                    koutiaCmd, proiontaCmd, sxeseisCmd,
                    sxeseisByKoutiCmd;
 
@@ -25,9 +26,9 @@ namespace Apothiki {
         ApothikiDataSet.ProionDataTable proionTable;
         ApothikiDataSet.SxesiDataTable sxesiTableProion;
         DataTable sxesiTableKoutiId;
-        SqlDataReader dataReader;
+        SQLiteDataReader dataReader;
 
-        public SxesiDialog(SxesiDialogType sxesiDialogType, SqlConnection con) {
+        public SxesiDialog(SxesiDialogType sxesiDialogType, SQLiteConnection con) {
             InitializeComponent();
             this.sxesiDialogType = sxesiDialogType;
             this.con = con;
@@ -36,15 +37,15 @@ namespace Apothiki {
                 this.Text = "Εισαγωγή προϊόντος σε κουτί";
 
                 newSxesiCmdString = "INSERT INTO SXESI (KoutiId,ProionName) VALUES (@KoutiId,@ProionName)";
-                newSxesiCmd = new SqlCommand(newSxesiCmdString, con);
-                newSxesiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
-                newSxesiCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
+                newSxesiCmd = new SQLiteCommand(newSxesiCmdString, con);
+                newSxesiCmd.Parameters.AddWithValue("@KoutiId", "DEFAULT");
+                newSxesiCmd.Parameters.AddWithValue("@ProionName", "DEFAULT");
 
                 koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
-                koutiaCmd = new SqlCommand(koutiaCmdString, con);
+                koutiaCmd = new SQLiteCommand(koutiaCmdString, con);
 
                 proiontaCmdString = "SELECT * FROM Proion ORDER BY Name";
-                proiontaCmd = new SqlCommand(proiontaCmdString, con);
+                proiontaCmd = new SQLiteCommand(proiontaCmdString, con);
 
                 koutiTable = new ApothikiDataSet.KoutiDataTable();
                 proionTable = new ApothikiDataSet.ProionDataTable();
@@ -53,16 +54,16 @@ namespace Apothiki {
                 this.Text = "Εξαγωγή προϊόντος από κουτί";
 
                 delSxesiCmdString = "DELETE FROM SXESI WHERE (KoutiId=@KoutiId) AND (ProionName=@ProionName)";
-                delSxesiCmd = new SqlCommand(delSxesiCmdString, con);
-                delSxesiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
-                delSxesiCmd.Parameters.Add("@ProionName", SqlDbType.NVarChar);
+                delSxesiCmd = new SQLiteCommand(delSxesiCmdString, con);
+                delSxesiCmd.Parameters.AddWithValue("@KoutiId", "DEFAULT");
+                delSxesiCmd.Parameters.AddWithValue("@ProionName", "DEFAULT");
 
                 sxeseisCmdString = "SELECT DISTINCT KoutiId FROM SXESI ORDER BY KoutiId";
-                sxeseisCmd = new SqlCommand(sxeseisCmdString, con);
+                sxeseisCmd = new SQLiteCommand(sxeseisCmdString, con);
 
                 sxeseisByKoutiCmdString = "SELECT * FROM SXESI WHERE (KoutiId=@KoutiId) ORDER BY KoutiId";
-                sxeseisByKoutiCmd = new SqlCommand(sxeseisByKoutiCmdString, con);
-                sxeseisByKoutiCmd.Parameters.Add("@KoutiId", SqlDbType.Int);
+                sxeseisByKoutiCmd = new SQLiteCommand(sxeseisByKoutiCmdString, con);
+                sxeseisByKoutiCmd.Parameters.AddWithValue("@KoutiId", "DEFAULT");
 
                 sxesiTableKoutiId = new DataTable();
                 sxesiTableProion = new ApothikiDataSet.SxesiDataTable();
@@ -105,12 +106,12 @@ namespace Apothiki {
                     dataReader = koutiaCmd.ExecuteReader();
                     koutiTable.Load(dataReader);
                     dataReader.Close();
-                    koutiaCmd.Dispose();
+                    //koutiaCmd.Dispose();
 
                     dataReader = proiontaCmd.ExecuteReader();
                     proionTable.Load(dataReader);
                     dataReader.Close();
-                    proiontaCmd.Dispose();
+                    //proiontaCmd.Dispose();
 
                     comboBoxKouti.DataSource = koutiTable;
                     comboBoxKouti.DisplayMember = "Id";
@@ -122,8 +123,8 @@ namespace Apothiki {
                     comboBoxProion.BindingContext = this.BindingContext;
                     comboBoxProion.SelectedIndex = -1;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -139,14 +140,14 @@ namespace Apothiki {
                     dataReader = sxeseisCmd.ExecuteReader();
                     sxesiTableKoutiId.Load(dataReader);
                     dataReader.Close();
-                    sxeseisCmd.Dispose();
+                    //sxeseisCmd.Dispose();
 
                     if (sxesiTableKoutiId.Rows.Count > 0)
                         foreach (DataRow dataRow in sxesiTableKoutiId.Rows)
                             comboBoxKouti.Items.Add(dataRow["KoutiId"].ToString());
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -167,20 +168,21 @@ namespace Apothiki {
                     try {
                         con.Open();
                         int rowsAffected = newSxesiCmd.ExecuteNonQuery();
-                        newSxesiCmd.Dispose();
+                        //newSxesiCmd.Dispose();
 
-                        if (rowsAffected == 2)
+                        if (rowsAffected == 1)
                             MessageBox.Show("Η εισαγωγή του προϊόντος \"" + proionName + "\" στο κουτί " + koutiId + " ολοκληρώθηκε με επιτυχία.", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else
-                            MessageBox.Show("Σφάλμα", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Σφάλμα ", "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    catch (SqlException sqlEx) {
-                        if (sqlEx.Number == 2627)
-                            MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        else if (sqlEx.Number == 547)
-                            MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που πληκτρολογήσατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    catch (SQLiteException sqlEx) {
+                        if (sqlEx.ErrorCode == 19)
+                            if (sqlEx.Message.Contains("UNIQUE"))
+                                MessageBox.Show("Το προϊόν \"" + proionName + "\" υπάρχει ήδη στο Κουτί " + koutiId, "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            else
+                                MessageBox.Show("Η εισαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που πληκτρολογήσατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         else
-                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (FormatException) {
@@ -209,8 +211,8 @@ namespace Apothiki {
                         else if (rowsAffected == 0)
                             MessageBox.Show("Η εξαγωγή δεν ήταν επιτυχής. Το κουτί ή το προϊόν που πληκτρολογήσατε δεν υπάρχει στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (SQLiteException sqlEx) {
+                        MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 catch (FormatException) {
@@ -233,21 +235,25 @@ namespace Apothiki {
         private void updateComboBoxProion() {
             if (comboBoxKouti.Text != "") {
                 sxesiTableProion.Clear();
-                sxeseisByKoutiCmd.Parameters["@KoutiId"].Value = Int32.Parse(comboBoxKouti.Text);
 
                 try {
+                    sxeseisByKoutiCmd.Parameters["@KoutiId"].Value = Int32.Parse(comboBoxKouti.Text);
                     con.Open();
                     dataReader = sxeseisByKoutiCmd.ExecuteReader();
                     sxesiTableProion.Load(dataReader);
                     dataReader.Close();
-                    sxeseisByKoutiCmd.Dispose();
+                    //sxeseisByKoutiCmd.Dispose();
 
                     comboBoxProion.DataSource = sxesiTableProion;
                     comboBoxProion.DisplayMember = "ProionName";
                     comboBoxProion.BindingContext = this.BindingContext;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (FormatException)
+                {
+                    
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)

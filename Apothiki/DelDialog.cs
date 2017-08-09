@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 namespace Apothiki {
@@ -11,19 +12,19 @@ namespace Apothiki {
 
     public partial class DelDialog : Form {
 
-        SqlConnection con;
+        SQLiteConnection con;
         DelDialogType delDialogType;
 
         String delKoutiCmdString, delProionCmdString,
                koutiaCmdString, proiontaCmdString;
-        SqlCommand delKoutiCmd, delProionCmd,
+        SQLiteCommand delKoutiCmd, delProionCmd,
                    koutiaCmd, proiontaCmd;
 
         ApothikiDataSet.KoutiDataTable koutiTable;
         ApothikiDataSet.ProionDataTable proionTable;
-        SqlDataReader dataReader;
+        SQLiteDataReader dataReader;
 
-        public DelDialog(DelDialogType delDialogType, SqlConnection con) {
+        public DelDialog(DelDialogType delDialogType, SQLiteConnection con) {
             InitializeComponent();
             this.delDialogType = delDialogType;
             this.con = con;
@@ -33,11 +34,11 @@ namespace Apothiki {
                 this.labelKoutiOrProion.Text = "Αριθμός Κουτιού";
 
                 delKoutiCmdString = "DELETE FROM KOUTI WHERE (Id=@Id)";
-                delKoutiCmd = new SqlCommand(delKoutiCmdString, con);
-                delKoutiCmd.Parameters.Add("@Id", SqlDbType.Int);
+                delKoutiCmd = new SQLiteCommand(delKoutiCmdString, con);
+                delKoutiCmd.Parameters.AddWithValue("@Id", "DEFAULT");
 
                 koutiaCmdString = "SELECT * FROM KOUTI ORDER BY Id";
-                koutiaCmd = new SqlCommand(koutiaCmdString, con);
+                koutiaCmd = new SQLiteCommand(koutiaCmdString, con);
                 koutiTable = new ApothikiDataSet.KoutiDataTable();
             }
             else if (delDialogType == DelDialogType.Proion) {
@@ -46,11 +47,11 @@ namespace Apothiki {
                 this.comboBoxKoutiOrProion.Size = new System.Drawing.Size(224, 21);
 
                 delProionCmdString = "DELETE FROM PROION WHERE (Name=@Name)";
-                delProionCmd = new SqlCommand(delProionCmdString, con);
-                delProionCmd.Parameters.Add("@Name", SqlDbType.NVarChar);
+                delProionCmd = new SQLiteCommand(delProionCmdString, con);
+                delProionCmd.Parameters.AddWithValue("@Name", "DEFAULT");
 
                 proiontaCmdString = "SELECT * FROM PROION ORDER BY Name";
-                proiontaCmd = new SqlCommand(proiontaCmdString, con);
+                proiontaCmd = new SQLiteCommand(proiontaCmdString, con);
                 proionTable = new ApothikiDataSet.ProionDataTable();
             }
             fillComboBoxKoutiOrProion();
@@ -71,8 +72,8 @@ namespace Apothiki {
                             else
                                 MessageBox.Show("Το κουτί " + id + " δε βρέθηκε στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         }
-                        catch (SqlException sqlEx) {
-                            MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        catch (SQLiteException sqlEx) {
+                            MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -100,8 +101,8 @@ namespace Apothiki {
                         else
                             MessageBox.Show("Το προϊόν \"" + name + "\" δε βρέθηκε στη βάση", "Ειδοποίηση", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
-                    catch (SqlException sqlEx) {
-                        MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    catch (SQLiteException sqlEx) {
+                        MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally {
                         if (con.State != ConnectionState.Closed)
@@ -121,15 +122,15 @@ namespace Apothiki {
                     dataReader = koutiaCmd.ExecuteReader();
                     koutiTable.Load(dataReader);
                     dataReader.Close();
-                    koutiaCmd.Dispose();
+                    //koutiaCmd.Dispose();
 
                     comboBoxKoutiOrProion.DataSource = koutiTable;
                     comboBoxKoutiOrProion.DisplayMember = "Id";
                     comboBoxKoutiOrProion.BindingContext = this.BindingContext;
                     comboBoxKoutiOrProion.SelectedIndex = -1;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
@@ -143,15 +144,15 @@ namespace Apothiki {
                     dataReader = proiontaCmd.ExecuteReader();
                     proionTable.Load(dataReader);
                     dataReader.Close();
-                    proiontaCmd.Dispose();
+                    //proiontaCmd.Dispose();
 
                     comboBoxKoutiOrProion.DataSource = proionTable;
                     comboBoxKoutiOrProion.DisplayMember = "Name";
                     comboBoxKoutiOrProion.BindingContext = this.BindingContext;
                     comboBoxKoutiOrProion.SelectedIndex = -1;
                 }
-                catch (SqlException sqlEx) {
-                    MessageBox.Show("Error " + sqlEx.Number + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (SQLiteException sqlEx) {
+                    MessageBox.Show("Error " + sqlEx.ErrorCode + ": " + sqlEx.Message, "Σφάλμα", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally {
                     if (con.State != ConnectionState.Closed)
